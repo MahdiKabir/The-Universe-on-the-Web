@@ -1,0 +1,623 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<title>The Universe on the Web</title>
+		<meta charset="utf-8" content="">
+		<link rel="stylesheet" href="stylesheet.css" />
+		<script type="text/javascript" src="jquery.min.js"></script>
+		<script type="text/javascript" src="unslider.min.js"></script>
+		
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var header = document.getElementsByTagName('header')[0];
+				var header_image = document.getElementById('header-image');
+				var title = document.getElementById('title');
+				//var navigator = document.getElementById('navigator');
+				var content = document.getElementById('content');
+				var figures = document.getElementsByTagName('figure');
+				var slideshows = document.getElementsByClassName('data-slideshow');
+				var body = document.getElementsByTagName('body')[0];
+				
+				$(window).resize(onResize);
+				$(window).scroll(onScroll);
+				onResize();
+				onScroll();
+				
+				//body.style.width = (viewport().width) + "px";
+				
+				var len_i = slideshows.length;
+				for (var i = 0; i < len_i; i++)
+				{
+					var unslider = $(slideshows[i]).unslider();
+					var data = unslider.data('unslider');
+					data.move(0);
+					data.stop();
+					//data.prev();
+				}
+				
+				$('.data-slideshow').unslider({
+					speed: 100000,
+					delay: 36000000,
+					keys: true,
+					dots: false,
+					arrows: false,
+					autoplay: false
+				});
+				
+				$('.slideshow-arrow').click(function() {
+					var classes = this.className.split(' ');
+					var ssid = '#' + classes[1], direction = classes[2];
+					var unslider = $(ssid).unslider();
+					var data = unslider.data('unslider');
+					
+					alert(direction);
+					
+					switch (direction)
+					{
+						case "prev":
+							data.prev();
+						case "next":
+							data.next();
+					}
+					data.stop();
+					$('#planets').ScrollTo();
+				});
+				
+				$(window).resize(function() {
+					var len_i = figures.length;
+					for (var i = 0; i < len_i; i++)
+					{
+						updateFigure(figures[i]);
+					}
+				});
+				
+				function updateFigure(figure)
+				{
+					var image_present = false;
+					var caption_present = false;
+					var new_height = 0, new_width = 0;
+					var fig_img, fig_cap;
+					
+					var len_j = figure.children.length;
+					for (var j = 0; j < len_j; j++)
+					{
+						switch (figure.children[j].tagName)
+						{
+							case "IMG":
+								if (figure.children[j].src !== null)
+								{
+									image_present = true;
+									fig_img = figure.children[j];
+								}
+								break;
+							case "SPAN":
+								caption_present = true;
+								fig_cap = figure.children[j];
+								break;
+						}
+					}
+					
+					//if (figure.style.width  !== "") new_width  = figure.style.width;
+					//if (figure.style.height !== "") new_height = figure.style.height;
+					
+					if (image_present)
+					{
+						var img_width = toString(new_width), img_height = toString(new_height);
+						
+						if (fig_img.style.width  !== "") img_width  = fig_img.style.width;
+							else img_width  = fig_img.width + "px";
+						if (fig_img.style.height !== "") img_height = fig_img.style.height;
+							else img_height = fig_img.height + "px";
+						
+						figure.style.width  = img_width;
+						figure.style.height = img_height;
+					}
+					
+					if (caption_present)
+					{
+						fig_cap.style.width = (new_width - 24) + "px";
+					}
+				}
+				
+				/*len_i = slideshows.length;
+				for (var i = 0; i < len_i; i++)
+				{
+					var ssheaders = slideshows.getElementsBySelector('div>div');
+					
+					var len_j = ssheaders.length;
+					for (var j = 0; j < len_j; j++)
+					{
+						ssheaders.add
+						
+					}
+				
+				
+				}*/
+				
+				function onScroll()
+				{
+					if ($(window).scrollLeft > 0)
+						window.scrollTo(0, $(window).scrollTop);
+					
+					var beyondTrigger = isScrolledBeyond(header_image, 78);
+					var heightTitle = title.scrollHeight;
+					//var navigator_timeout;
+					
+					if (checkChange(beyondTrigger))
+					{
+						if (beyondTrigger > 0)
+						{
+							title.className = "title-animate";
+							header.className = "header-animate";
+							//navigator.style.display = "";
+						} else {
+							title.className = "";
+							header.className = "";
+							//navigator.style.display = "none";
+						}
+					}
+					
+					function isScrolledBeyond(elem, offset)
+					{
+						return (Math.max(($(window).scrollTop() + offset) - ($(elem).offset().top + $(elem).height()), 0));
+					}
+					
+					function checkChange(now)
+					{
+						var now_bool = now > 0;
+						
+						if (typeof this.last_change === 'undefined' || this.last_change !== now_bool)
+						{
+							this.last_change = now_bool;
+							return true;
+						}
+						
+						return false;
+					}
+				}
+				
+				// Limit image widths to maximum screen width.
+				function onResize()
+				{
+					function viewport()
+					{
+						var w=window, d=document, e=d.documentElement, g=d.getElementsByTagName('body')[0];
+						return { width : (w.innerWidth||e.clientWidth||g.clientWidth), height : (w.innerHeight||e.clientHeight||g.clientHeight) };
+					}
+					
+					var bounds = viewport()
+					
+					if (title.classname === "")
+						title.style.marginLeft = -bounds.width + "px"
+					
+					// Resize images.
+					var images = document.getElementsByTagName('img');
+					for (var i in images)
+					{
+						var maxWidth = bounds.width;
+						/*
+						if (images[i].naturalWidth > maxWidth)
+							images[i].style.width = "100%";//maxWidth + "px";*/
+					}
+				}
+				
+				function simulateKeyPress(character) {
+					jQuery.event.trigger({ type : 'keypress', which : character.charCodeAt(0) });
+				}
+			});
+		</script>
+	</head>
+	<body>
+		<header>
+			<h2 id="title">The Universe on the Web</h2><!--
+			<table id="navigator" style="display: none;"><tr>
+				<td><a href="#top" class="smoothscroll">Back to top</a></td>
+				<td><a href="#bottom" class="smoothscroll">Bottom</a></td>
+			</tr></table>-->
+		</header>
+		<img src="resources/header2.png" id="header-image" width="100%" style="margin-bottom: -4px;" />
+		<audio><source src="resources/relax-chillout.mp3" type="audio/mp3" /></audio>
+		<div id="content" class="division" width="100%">
+			<h2 style="font-family: 'Sansation'; font-weight: bold;">Welcome to the Universe on the Web.</h2>
+			<p style="margin-bottom: 1em;">This is a compendium of knowledge, illustrations and imagery, of the entire Universe, on the fields of cosmology, astronomy and the technology used to carry out the studies on these fields. This compendium of information has been designed to give critical information on the most important aspects of the universe and the technology used in a concise and straightforward manner. The authors of the compendium welcomes you to... <span style="font-style: italic; font-weight: bold;">The Universe on the Web.</span></p>
+<h2>The Solar System</h2>
+<figure style="width: 100%; margin: 0;"><img src="resources/images/solarsys_scale.jpg" width="100%" style="margin-top: -1em;" /><span class="figcaption">The planets to scale. The rings of the gas giants are not shown. (Distance between objects not to scale)</span></figure>
+<figure style="float: right;"><img src="resources/images/history/Ptolemaicsystem-small.png" style="width: 400px;" /><span class="figcaption">The geocentric model.</span></figure>
+<p>For thousands of years ancient astronomers saw points of light that appeared to move among the stars. They called these <i><i>‘planets’</i></i>, meaning <i><i>‘wanderers’</i></i>, and named them after the Roman gods. If you look up at a clear night sky, you too will be able to see many of the planets that the ancient astronomers saw. You might also see an assortment of space junk and satellites that also move in the night sky.</p>
+<h3>Theories of the solar system</h3>
+<ul>
+	<li><name>Pythagoras,</name> a Greek scientist who lived in the sixth century BC suggested that the Earth was the centre of the universe.</li>
+	<li><name>Aristotle</name> (384–322 BC), <name>Hipparchus</name> (died after <date>127 BC</date>) and Ptolemy (<date>127–145 AD</date>) proposed more detailed models in which Earth was placed at the centre of the solar system.</li>
+	<li>This type of model is known as the <b>Geocentric</b> (geo-earth) or the <b>Ptolemy model.</b></li>
+	<li>Another ancient Greek, <name>Aristarchus</name> (<period>310–230 BC</period>) questioned the geocentric model and proposed a model where the Earth and other planets revolved around the Sun. This is known as a <b>Heliocentric model.</b> (Helio, i.e. Sun)</li>
+	<li>The geocentric model continued to be favoured until the end of the fifteenth century</li>
+	<li>In the 1530s, Polish astronomer Nicolas Copernicus (1473–1543) agreed with Aristarchus</li>
+	<li>Galileo (1564–1642) was a strong supporter of Copernicus’s ideas, and in 1609 he used a telescope for the first time to make detailed observations of the Moon and planets; his observations exposed errors in the geocentric model</li>
+	<li>Tycho Brahe (1546–1601) didn’t support the heliocentric theory and took numerous detailed measurements of the positions of stars and planets in an attempt to improve the geocentric model</li>
+	<li>His assistant, German astronomer Johannes Kepler (1571–1630) finally showed the heliocentric model was correct using Tycho Brahe's data. His observations and findings are now called <span style="font-style: italic;">Kepler's Laws of Planetary Motion.</span></li>
+	<figure style="float: right;"><img src="resources/images/history/Heliocentric.jpg" style="width: 400px;" /><span class="figcaption">The heliocentric model.</span></figure>
+	<li>Sir Isaac Newton (1643-1747), famous for "discovering gravity", published his <i>Philosophiæ Naturalis Principia Mathematica</i> ("the Principia") and along with it, <b>Newton's laws of universal gravitation</b> which expanded upon Kepler's laws and provided the possibility for more thorough mathematical analysis. His laws of gravitation, stated as <i>"any two bodies in the universe attract each other with a force that is directly proportional to the product of their masses and inversely proportional to the square of the distance between them,"</i> was finally confirmed by the famous <i>Cavendish experiement</i> 111 years after the publication of the Principia.</li>
+	<li>Albert Einstein (1879-1955), in a set of phenomenal papers in 1905 while he was working as a patent clerk, proved among other things, <i>the theory of special relativity</i> and the <i>mass-energy equivalence.</i> The first had proven that time passes slower relatively to other objects when the objects are moving relatively, and that it was the solution for the mystery of the orbit of Mercury. Special relativity, along with the mass-energy equivalence, also opened up the theoretical possibility of <i>black holes.</i></li>
+</ul>
+<h3>The solar system</h3><ul>
+	<li>The term <i>‘solar system’</i> takes its name from the object at the centre of it all—the Sun, also known as Sol.</li>
+	<li>The nine planets of the solar system, in order starting from closest to the Sun, are: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune and Pluto (now known as a dwarf planet).</li>
+	<li>A mnemonic device to remember the order could be: <u>M</u>y <u>V</u>ery <u>E</u>legant <u>M</u>other <u>J</u>ust <u>S</u>erved <u>U</u>s <u>N</u>ine <u>P</u>izzas</li>
+	<li>The planets each orbit the Sun, rotating on their axes as they do so.</li>
+	<li>The time taken for a planet to spin once on its axis is called its day, and the time taken to orbit the Sun once is called its year.</li>
+	<li>All the planets have days and years of different lengths.</li>
+</ul>
+<h3>How the planets move:</h3><ul>
+	<li>The gravitational attraction between the sun and a planet acts as a centripetal force to cause the planet to orbit in a circular pattern.</li>
+	<li>The inverse-square law allows the possibility of elliptical orbits, e.g. the orbit of <a href="#eris">Eris.</a> The amount of difference from a circular orbit can be quantified by the orbit's <i>ellipticity.</i></li>
+	<li>The four innermost planets are called terrestrial (meaning <i>‘Earth-like’</i>) and orbit the Sun in almost circular orbits</li>
+	<li>The larger outer planets — Jupiter, Saturn, Uranus and Neptune—are known as the gas giants (or Jovian planets), because their outer layers are composed of gases such as hydrogen and helium, and they move in elliptical or oval orbits</li>
+	<li>All planets move in the same plane (a large imaginary flat surface) except for Pluto, whose orbit is tilted by about 17° compared to the other planets’ orbits</li>
+</ul>
+<img src="resources/images/outer_orb.jpg" width="100%" />
+<div style="background-color: #222222; margin-bottom: 0; padding-left: 0; padding-bottom: 0.6em; width: 100%; text-align: center; color: white;" >
+	<h3 style="display: inline-block; margin-bottom: 0;">THE SOLAR SYSTEM</h3><br /><small style="font-size: 0.8em;">(press keyboard arrow keys)</small>
+</div>
+<div id="planets" class="data-slideshow"><ul>
+	<li>
+		<div class="slideshow-header" id="sun"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Sun</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-figures">
+			<figure><img src="resources/images/Sun920607.jpg" /><span class="figcaption"></span></figure> 
+			<table><tr><th>Mythology</th><td>The Sun God. Greeks Called it <i>Hellos.</i></td></tr>
+			<tr><th>Mass</th><td>333 400 times the mass of the Earth</td></tr>
+			<tr><th>Diameter</th><td>1 392 000 km (109x Earth’s diameter)</td></tr>
+			<tr><th>Gravity</th><td>28 times that on Earth</td></tr>
+			<tr><th>Surface Temperature</th><td>6000°C (average).<br />From 4500°C to 2000000°C up to 15000000°C in the core.</td></tr>
+			<tr><th>Equator</th><td>26 Earth days, poles 37 Earth days</td></tr>
+			<tr><th>Tilt of axis</th><td>122°</table>
+		</div>
+		<h4>Why is the Sun so hot?</h4><ul>
+			<li>At the start of the Sun's life, a large gas cloud &ndash; consisting primarily of hydrogen and helium &ndash; started collapsing down into a single, dense ball of plasma.</li>
+			<li>The gravitational potential energy, now converting into kinetic energy as the gas particles fall, become very hot as that kinetic energy is converted into heat energy by processes such as friction.</li>
+			<li>The centre of the "ball of plasma" continues to increase in pressure and temperature.</li>
+			<li>After the centre of the newly born star reaches a certain temperature and pressure, nuclear fusion of hydrogen nuclei into helium nuclei begins.</li>
+			<li>As the nuclear fusion of hydrogen into helium is an exothermic process, the core generates heat and supplies an outward pressure of its own, causing the star to expand and thereby raising the rate of heat loss from radiation of light.</li>
+			<li>The star now stays in a state of dynamic equilibrium, where excessive heat production causes the star to expand and raise the rate of heat loss; and excessive heat loss causes the star to contract, increasing the temperature and pressure at its core, thereby increasing the rate of heat generation from nuclear fusion.</li>
+		</ul>
+		<h4>The lifecycle of a nuclear-powered star.</h4><ul>
+			<li>Stars </li>
+		</ul>
+	</li>
+	<li>
+		<div class="slideshow-header" id="mercury"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Mercury</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-figures">
+			<figure><img src="resources/images/Reprocessed_Mariner_10_image_of_Mercury.jpg" /><span class="figcaption"></span></figure> 
+			<table><tr><th>Mythology</th><td>God of travel, commerce and thieves.</td></tr>
+			<tr><th>Mass</th><td>0.056 times that of Earth</td></tr>
+			<tr><th>Moons</th><td>None</td></tr>
+			<tr><th>Diameter</th><td>4878 km (0.38x Earth’s diameter)</td></tr>
+			<tr><th>Surface</th><td>Similar to Earth’s moon</td></tr>
+			<tr><th>Gravity</th><td>0.38 times that on Earth</td></tr>
+			<tr><th>Surface Temperature</th><td>-170°C to 430°C</td></tr>
+			<tr><th>Period of rotation</th><td>59 Earth days</td></tr>
+			<tr><th>Tilt of axis</th><td>0°</td></tr>
+			<tr><th>Distance from Sun</th><td>0.39 AU (58 million kilometres)</td></tr>
+			<tr><th>Time to orbit Sun</th><td>88 Earth days</table>
+		</div>
+		<h4>Key points</h4>
+		<ul>
+			<li>Mercury is the closest planet to the Sun, and is a relatively small planet.
+			<li>Its proximity to the sun has allowed the Sun's spray of plasma particles and solar flares to "shave off" its atmosphere contents.</li>
+			<li>A lack of an atmosphere implies low heat capacity. The side of the surface in shade cools down to a freezing -170°C, while the side where the Sun's rays reaches is heated to a blazing 430°C.</li>
+			<li>Its surface texture is similar to Earth's Moon.</li>
+		</ul>
+	</li>
+	<li>
+		<div class="slideshow-header" id="venus"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Venus</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-figures">
+			<figure><img src="resources/images/Venus-real.jpg" /><span class="figcaption"></span></figure> 
+			<table><tr><th>Mythology</th><td>Goddess of love and beauty.</td></tr>
+			<tr><th>Mass</th><td>0.815 times that of Earth</td></tr>
+			<tr><th>Moons</th><td>None</td></tr>
+			<tr><th>Diameter</th><td>12 103 km (0.95x Earth’s diameter)</td></tr>
+			<tr><th>Surface</th><td>Extensive cratering, volcanic activity.</td></tr>
+			<tr><th>Gravity</th><td>0.9 times that on Earth</td></tr>
+			<tr><th>Surface Temperature</th><td>460°C</td></tr>
+			<tr><th>Period of rotation</th><td>243 Earth days</td></tr>
+			<tr><th>Tilt of axis</th><td>30°</td></tr>
+			<tr><th>Distance from Sun</th><td>0.72 AU (108 million kilometres)</td></tr>
+			<tr><th>Time to orbit Sun</th><td>225 Earth days</table>
+		</div>
+		<h4>Key points</h4><ul>
+			<li>Venus has the hottest surface temperature of all planets, exceeding that of Mercury's. The cause of this is likely that a runaway greenhouse effect has taken place &ndash; letting the atmosphere heat up while heat loss is limited.</li>
+			<li>Venus is similar in size to Earth, with similar surface gravity as well.</li>
+		</ul>
+	</li>
+	<li>
+		<div class="slideshow-header" id="earth"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Earth</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-figures">
+			<figure><img src="resources/images/earth/The_Earth_seen_from_Apollo_17.jpg" /><span class="figcaption"><span style="font-style: italic; font-weight: bold;">The Blue Marble</span> is a famous photograph of the Earth, taken on December 7th, 1972, by the crew of the <span style="font-style: italic;">Apollo 17</span> spacecraft at a distance of about 45,000 kilometers. It is one of the most iconic, and among the most widely distributed images in human history.</span></figure> 
+			<table><tr><th>Mythology</th><td>Gaia — Mother Earth</td></tr>
+			<tr><th>Mass</th><td>1.0 times that of Earth (5 980 000 000 000 000 000 000 000 kg)</td></tr>
+			<tr><th>Moons</th><td>One (<i>‘the Moon’</i>)</td></tr>
+			<tr><th>Diameter</th><td>12 756 km</td></tr>
+			<tr><th>Surface</th><td>Two-thirds water, one-third land</td></tr>
+			<tr><th>Gravity</th><td>1.0 times that on Earth</td></tr>
+			<tr><th>Surface Temperature</th><td>average 22°C</td></tr>
+			<tr><th>Period of rotation</th><td>1 Earth day</td></tr>
+			<tr><th>Tilt of axis</th><td>23.5°</td></tr>
+			<tr><th>Distance from Sun</th><td>1 AU (150 million kilometres)</td></tr>
+			<tr><th>Time for light to reach Earth</th><td>8 minutes</td></tr>
+			<tr><th>Time to orbit Sun</th><td>365.25 Earth days</td></tr></table>
+		</div>
+		<h4>Earth’s movement in space</h4><ul>
+			<li>The ancient civilisations defined the days, seasons, months and years by following the movements of the Sun and Moon. Babylonians, Mayans, indigenous Australians and many other cultures all developed complex ways to predict seasonal changes. This enabled people to plan when to plant crops or move to a new location in search of seasonal foods. Survival depended on this ancient scientific knowledge of the Earth’s movement in space.</li>
+			<li>The earth spins on its axis, causing alternating day and night</li>
+			<li>When Earth is in the position shown, days are shorter in the southern hemisphere and longer in the northern hemisphere.</li>
+		</ul>
+		<h4>Earth’s movement in space: one year</h4><ul>
+			<li>The time taken by a planet to orbit (travel around) the Sun is called a year.</li>
+			<li>Earth spins on its axis while it orbits the Sun.</li>
+			<li>The Earth spins once on its axis in a day, and takes a year to orbit the Sun.</li>
+		</ul>
+		<h4>Earth’s movement in space: seasons</h4><ul>
+			<li>As the Earth orbits the Sun, the tilt causes different parts of the Earth to experience different heating effects</li>
+			<li>At the summer solstice, days are longest, and at the winter solstice, days are shortest.</li>
+			<li>Between these two times, at the two equinoxes, day and night are of equal length.</li>
+		</ul>
+		<h4>Bengali seasons:</h4><ul>
+			<li>Summer.</li>
+			<li>Rainy/Monsoon.</li>
+			<li>Autumn. (storm season)</li>
+			<li>Late Autumn. (cooler but still humid season)</li>
+			<li>Winter. (cold weather season)</li>
+			<li>Spring. (hot dry weather)</li>
+		</ul>
+	</li>
+	<li>
+		<div class="slideshow-header" id="moon"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>The Moon</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-figures">
+			<figure><img src="resources/images/FullMoon2010.jpg" /><span class="figcaption">A <i>full moon,</i> as seen from Earth's northern hemisphere.</span></figure> 
+			<table><tr><th>Mythology</th><td>God of the night</td></tr>
+			<tr><th>Mass</th><td>0.012 times that of Earth</td></tr>
+			<tr><th>Diameter</th><td>3476 km (0.27x Earth’s diameter)</td></tr>
+			<tr><th>Gravity</th><td>0.16 times that on Earth</td></tr>
+			<tr><th>Surface Temperature</th><td>-230°C to 123°C</td></tr>
+			<tr><th>Period of rotation</th><td>27.3 days</td></tr>
+			<tr><th>Tilt of axis</th><td>5°</td></tr>
+			<tr><th>Distance from Earth</th><td>384,403 kilometres</td></tr>
+			<tr><th>Time to orbit Earth</th><td>29.5 days</td></tr>
+			<tr><th>Time to reach Moon</th><td>3 days</td></tr>
+			<tr><th>Date first visited</th><td>July 20, 1969</td></tr></table>
+		</div>
+		<quotation>We choose to go to the moon. We choose to go to the moon in this decade and do the other things, not because they are easy, but because they are hard, because that goal will serve to organize and measure the best of our energies and skills, because that challenge is one that we are willing to accept, one we are unwilling to postpone, and one which we intend to win, and the others, too.
+		<span class="quotation-author">&mdash; John F. Kennedy. September 12th, 1962.</span></quotation>
+		<h4>What does the Moon do?</h4><ul>
+			<li>The Moon has a great impact on life on Earth.</li>
+			<li>It changes appearance over the course of one Earth month.</li>
+			<li>It is responsible for the tides.</li>
+			<li>It is involved in solar and lunar eclipses.</li>
+		</ul>
+		<p>Notice that the time for the Moon to orbit the Earth is nearly the same as the time it takes to spin once on its axis — this results in us only ever seeing the one side of the Moon from Earth. The other side is often called <i>‘the dark side of the Moon’</i> since it had never been seen before it was photographed by the Soviet Union's Luna 3 space probe.</p>
+		<h4>Phases of the Moon</h4><ul>
+			<li>The Moon takes about a month to orbit the Earth, and spins at a similar rate, and therefore we always see the same face of the Moon. How much of the Moon’s face we see depends on where it is in its orbit around the Earth. We call these different views phases.</li>
+			<li>Imagine yourself on the Earth, under point A looking towards Moon A . Because the Sun is directly behind the Moon, you see nothing of the Moon. Now imagine yourself on Earth under point C, looking directly towards Moon C. From here you would see only half the Moon.</li>
+		</ul>
+		<h4>The Moon and the tides</h4><ul>
+			<li>As early as the second century BC, the Chinese had recognised a connection between tides and the Moon’s cycle. About twice a day the sea level rises to a high tide and falls to a low tide—the average time between two high tides is 12 hours 25 minutes. It was not until Newton proposed a theory of gravity in 1687 that tides were understood to be the result of the Moon’s gravitational pull on the Earth.</li>
+			<li>The gravitational force between two objects is only noticeable when one or both objects are very large, as is the case with the Moon and the Earth. The Moon attracts the oceans towards it, enough to cause a bulge in the oceans facing the Moon. If this were the only effect there would only be one high tide and one low tide a day, not two. The Earth’s rotation, however, causes a similar bulge on the other side of the Earth.</li>
+		</ul>
+		<h4>Solar eclipse</h4>
+		<p>The word <i>‘eclipse’</i> comes from the Greek word for <i>‘abandonment’</i> — the eclipse was seen as the Sun abandoning the Earth. There are three types of solar eclipses.</p>
+		<ol>
+			<figure style="float: right;"><img src="resources/images/Eclipses_solares.en.png" /><span class="figcaption">A diagram of how how shadows are projected.</span></figure>
+			<li>Total solar eclipse is when the Sun is covered by the Moon.</li>
+			<li>Annular solar eclipse occurs when the Moon is at its greatest distance from the Earth.</li>
+			<li>Partial solar eclipse is when the Moon covers only part of the Sun.</li>
+		</ol>
+		<p>All solar eclipses occur when the Moon comes between the Earth and the Sun and the Moon’s shadow falls on the Earth.</p>
+		<h4>Lunar eclipse</h4><ul>
+			<li>A lunar eclipse occurs whenever the Moon passes through some portion of the Earth's shadow. This can occur only when the Sun, Earth, and Moon are aligned exactly, or very closely so, with the Earth in the middle. Hence, the Moon is always full during a lunar eclipse. A lunar eclipse occurs at least two times a year, whenever some portion of the Earth's shadow falls upon the Moon.</li>
+			<li>The Moon does not completely disappear as it passes through the umbra because of the refraction of sunlight by the Earth's atmosphere into the shadow cone; if the Earth had no atmosphere, the Moon would be completely dark during an eclipse. The red colouring arises because sunlight reaching the Moon must pass through a long and dense layer of the Earth's atmosphere, where it is scattered.</li>
+		</ul><!--
+		<figure style="float: right; width: 400px; height: auto;"><img src="resources/images/Eclipse_fromISS_2006-03-29.jpg" style="width: 400px;" /><span class="figcaption">A photograph of the Earth from the <i>International Space Station,</i> taken on March 29th, 2006.</span></figure>-->
+	</li>
+	<li>
+		<div class="slideshow-header" id="mars"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Mars</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-figures">
+			<figure><img src="resources/images/2005-1103mars-full.jpg" /><span class="figcaption">A picture of Mars, "The Red Planet." A blue aurora can be seen at its north pole; caused by collision of solar or charged particles with the atmosphere's air molecules. It is observed only at the poles as the charged particles are deflected and "guided" by the planet's magnetic field lines towards and into the poles.</span></figure> 
+			<table><tr><th>Mythology</th><td>God of war</td></tr>
+			<tr><th>Mass</th><td>0.107 times that of Earth</td></tr>
+			<tr><th>Moons</th><td>2 (Phobos—diameter 23 km, Deimos—diameter 10 km)</td></tr>
+			<tr><th>Diameter</th><td>6794 km (0.53x Earth’s diameter)</td></tr>
+			<tr><th>Surface</th><td>Soft red soil containing iron oxide (rust). Cratered regions, large volcanoes, a large canyon and possible dried-up water channels.</td></tr>
+			<tr><th>Gravity</th><td>0.376 times that on Earth</td></tr>
+			<tr><th>Surface Temperature</th><td>-120°C to 25°C</td></tr>
+			<tr><th>Period of rotation</th><td>1.03 Earth days</td></tr>
+			<tr><th>Tilt of axis</th><td>25.2°</td></tr>
+			<tr><th>Distance from Sun</th><td>1.52 AU (228 million kilometres)</td></tr>
+			<tr><th>Time to orbit Sun</th><td>687 Earth days</td></tr>
+			<tr><th>Time to reach Mars</th><td>9 months</td></tr></table>
+		</div>
+		<p>Mars is the fourth planet of our solar system. It is one of the most interesting extraterrestrial planets despite its barren nature, as it is thought that it may have been possible for it to have harboured alien life. It has a reduced magnetic field, thought to be because its core made of iron (which produces the magnetic field) has cooled down too much to generate a stronger magnetic field. The result has been that solar particles and solar flares have depleted the atmosphere to some extent. It has also been bombarded by meteorites, as shown by the numerous meteorite craters. A number of satellites, rovers and probes have been sent to the planet:</p>
+		<figure style="width: 400px; float: right;"><img src="resources/images/curiosity-rover.jpg" /><span class="figcaption">An illustration of the Mars rover, <i>Curiosity,</i> equipped with the <i>Mars Science Laboratory.</i> Its size is roughly equivalent to a small SUV.</span></figure>
+		<ul>
+			<li><i>Viking 1</i> & <i>Viking 2.</i>
+			<li><i>Mars Pathfinder.</i>
+			<li><i>MAVEN.</i>
+			<li><i>Spirit</i> & <i>Oppurtunity</i>: Two nearly identical rovers were sent to Mars. These were the longest running rovers on an extra-terrestrial planet.</li>
+			<li><i>Curiosity</i>: The <i>Mars Science Laboratory</i> and its rover centerpiece, <i>Curiosity</i>, is one of the most ambitious rover probes sent. The primary mission set for the mission is to find out if Mars is, or was, suitable for life. Another objective is to learn more about the red planet's environment. It has a large size &ndash; roughly equal to a small SUV &ndash; which allows it to host numerous equipment, including cameras, a robotic arm and other tools to analyse rock and ore. It is powered by a radioisotope thermoelectric generator, which works by exploiting the heat from the radioactive decay of Plutonium-238.</li>
+		</ul>
+	</li>
+	<li>
+		<div class="slideshow-header" id="jupiter"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Jupiter</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-figures">
+			<figure><img src="resources/images/Jupiter.jpg" /><span class="figcaption">A picture of Jupiter. The hue of the surface is seen as varying with longtitude, and with low magnification, the details of the surface can be lost. The large round storm near the bottom-left of the planet is the <i>"Big Red Dot."</i></span></figure> 
+			<table><tr><th>Mythology</th><td>Ruler of the Gods</td></tr>
+			<tr><th>Mass</th><td>318 times that of Earth</td></tr>
+			<tr><th>Moons</th><td>At least 28 moons and four rings, including the four largest moons: Io, Ganymede, Europa and Callisto. These are known as the <i>‘Galilean’</i> moons.</td></tr>
+			<tr><th>Diameter</th><td>142 984 km (11.21x Earth’s diameter)</td></tr>
+			<tr><th>Surface</th><td>Liquid hydrogen</td></tr>
+			<tr><th>Gravity</th><td>2.525 times that on Earth</td></tr>
+			<tr><th>Surface Temperature</th><td>Cloud top –150°C</td></tr>
+			<tr><th>Period of rotation</th><td>9 hours 55 minutes</td></tr>
+			<tr><th>Tilt of axis</th><td>3.1°</td></tr>
+			<tr><th>Distance from Sun</th><td>5.2 AU (778 million kilometres)</td></tr>
+			<tr><th>Time to orbit Sun</th><td>11.8 Earth years</td></tr></table>
+		</div>
+		<h4>Key points</h4>
+		<ul>
+			<li>Jupiter is a gas giant composed mostly of hydrogen, and it is the largest and most heaviest planet of our solar system.</li>
+			<li>Its density is very low, since it is a gas giant.</li>
+			<li>It has rings similar to Saturn, however they are not easily visible.</li>
+		</ul>
+		<h4>Notable characteristics</h4>
+		<ul>
+			<li>Its surface is seen as many bands of gas with different hues.</li>
+			<li>It has a never-ending storm on its surface, called the <i>"Big Red Dot"</i>. Due to Jupiter's size, its diameter is larger than the entire diametre of the Earth.</li>
+		</ul>
+	</li>
+	<li>
+		<div class="slideshow-header" id="saturn"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Saturn</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-figures">
+			<figure><img src="resources/images/Saturn_from_Cassini_Orbiter_%282007-01-19%29.jpg" /><span class="figcaption">A photograph of Saturn, captured by the Cassini Orbiter on January 19th, 2007.</span></figure> 
+			<table><tr><th>Mythology</th><td>God of agriculture</td></tr>
+			<tr><th>Mass</th><td>95.184 times that of Earth</td></tr>
+			<tr><th>Moons</th><td>At least 30 moons and rings in seven bands</td></tr>
+			<tr><th>Diameter</th><td>120 536 km (9.45x Earth’s diameter)</td></tr>
+			<tr><th>Surface</th><td>Gaseous hydrogen</td></tr>
+			<tr><th>Gravity</th><td>1.064 times that on Earth</td></tr>
+			<tr><th>Surface Temperature</th><td>-180°C</td></tr>
+			<tr><th>Period of rotation</th><td>10 hours 39 minutes</td></tr>
+			<tr><th>Tilt of axis</th><td>26.7°</td></tr>
+			<tr><th>Distance from Sun</th><td>9.6 AU (1400 million kilometres)</td></tr>
+			<tr><th>Time to orbit Sun</th><td>29.5 Earth years</td></tr></table>
+		</div>
+		<h4>Key points</h4><ul>
+			<li>Saturn is the second largest and second most-massive planet of our solar system.</li>
+			<li>Its most striking feature &ndash; its ring &ndash; has been observed for centuries.</li>
+			<li>Its surface is mostly bland and featureless.</li>
+			<li>It has a number of large moons and many other smaller ones, similar to Jupiter.</li>
+		</ul>
+		<h4>Saturn's ring</h4><ul>
+			<li>The rings are categorised based on their orbit radius and other details.</li>
+			<li>The rings are composed mostly of small ice and dust particles.</li>
+		</ul>
+	</li>
+	<li>
+		<div class="slideshow-header" id="uranus"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Uranus</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-figures">
+			<figure><img src="resources/images/Uranusandrings.jpg" /><span class="figcaption"></span></figure> 
+			<table><tr><th>Mythology</th><td>Father of Saturn</td></tr>
+			<tr><th>Mass</th><td>14.54 times that of Earth</td></tr>
+			<tr><th>Moons</th><td>At least 21 moons and 11 rings</td></tr>
+			<tr><th>Diameter</th><td>51 200 km (4.01x Earth’s diameter)</td></tr>
+			<tr><th>Surface</th><td>Likely to be frozen hydrogen and helium</td></tr>
+			<tr><th>Gravity</th><td>0.903 times that on Earth</td></tr>
+			<tr><th>Surface Temperature</th><td>-220°C</td></tr>
+			<tr><th>Period of rotation</th><td>17 hours 14 minutes</td></tr>
+			<tr><th>Tilt of axis</th><td>98°</td></tr>
+			<tr><th>Distance from Sun</th><td>19.2 AU (2875 million kilometres)</td></tr>
+			<tr><th>Time to orbit Sun</th><td>84 Earth years</table>
+		</div>
+		<h4>Key points</h4><ul>
+			<li>Uranus is one of the four gas giants in our solar system.</li>
+			<li>It also has rings; however they are not as prominent as Saturn's rings. It's composed mostly of ice particles.</li>
+			<li></li>
+		</ul>
+	</li>
+	<li>
+		<div class="slideshow-header" id="neptune"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Neptune</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-figures">
+			<figure><img src="resources/images/Neptune.jpg" /><span class="figcaption"></span></figure> 
+			<table><tr><th>Mythology</th><td>God of the sea</td></tr>
+			<tr><th>Mass</th><td>17.15 times that of Earth</td></tr>
+			<tr><th>Moons</th><td>8 moons and 5 rings</td></tr>
+			<tr><th>Diameter</th><td>49 528 km (3.88x Earth’s diameter)</td></tr>
+			<tr><th>Surface</th><td>Frozen hydrogen and helium</td></tr>
+			<tr><th>Gravity</th><td>1.135 times that on Earth</td></tr>
+			<tr><th>Surface Temperature</th><td>-220°C</td></tr>
+			<tr><th>Period of rotation</th><td>16 hours 7 minutes</td></tr>
+			<tr><th>Tilt of axis</th><td>29.3°</td></tr>
+			<tr><th>Distance from Sun</th><td>30.1 AU (4500 million kilometres)</td></tr>
+			<tr><th>Time to orbit Sun</th><td>165 Earth years</table>
+		</div>
+	</li>
+	<li>
+		<div class="slideshow-header" id="pluto"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Pluto (dwarf planet)</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-figures">
+			<figure><img src="resources/images/Pluto.jpg" /><span class="figcaption"></span></figure>
+			<table><tr><th>Mythology</th><td>God of the underworld</td></tr>
+			<tr><th>Mass</th><td>(1.305&nbsp;±&nbsp;0.007)&nbsp;×&nbsp;10<sup>22</sup>&nbsp;kg<br />0.0022&nbsp;Earths<br />0.178&nbsp;Moons</td></tr>
+			<tr><th>Moons</th><td>1 (Charon)</td></tr>
+			<tr><th>Diameter</th><td>2300 km (0.18x Earth’s diameter)</td></tr>
+			<tr><th>Surface</th><td>Icy crust of methane</td></tr>
+			<tr><th>Gravity</th><td>0.061 times that on Earth</td></tr>
+			<tr><th>Surface Temperature</th><td>-223°C</td></tr>
+			<tr><th>Period of rotation</th><td>6 Earth days</td></tr>
+			<tr><th>Tilt of axis</th><td>122°</td></tr>
+			<tr><th>Distance from Sun</th><td>39.6 AU (5914 million kilometres)</td></tr>
+			<tr><th>Time to orbit Sun</th><td>249 Earth years</table>
+		</div>
+		<figure style="float: right;"><img src="resources/images/New_Horizons_Transparent.png" style="width: 400px;" /><span class="figcaption">An illustration of <i>New Horizons,</i> the first spacecraft to reach Pluto.</span></figure>
+		<p>In July 2015, ten years after launching, the New Horizons spacecraft captured the first up-close imagery of Pluto, its moons and will continue to also record findings from a region of the outer solar system called the Kuiper Belt. So far, only the New Horizons spacecraft has reached Pluto.</p>
+	</li>
+	<li>
+		<div class="slideshow-header" id="eris"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Eris (dwarf planet)</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-figures">
+			<figure><img src="resources/images/Eris_and_dysnomia2.jpg" /><span class="figcaption">Eris (centre) and Dysnomia (lower-left).</span></figure>
+			<table><tr><th>Mythology</th><td>Greek goddess of strife</td></tr>
+			<tr><th>Mass</th><td>(1.67&nbsp;±&nbsp;0.02)&nbsp;×&nbsp;10<sup>22</sup>&nbsp;kg<br />0.0028&nbsp;Earths<br />0.23&nbsp;Moons</td></tr>
+			<tr><th>Moons</th><td>1 (Dysnomia)</td></tr>
+			<tr><th>Diameter</th><td>2600 km (± 400 km) Surface</td></tr>
+			<tr><th>Gravity</th><td></td></tr>
+			<tr><th>Surface Temperature</th><td>−243 and −217 degrees Celsius</td></tr>
+			<tr><th>Period of rotation</th><td>Possibly 8 hours</td></tr>
+			<tr><th>Distance from Sun</th><td>37.78 AU to 97.56 AU</td></tr>
+			<tr><th>Time to orbit Sun</th><td>556.7 Earth years</table>
+		</div>
+		<p>Discovered January 5, 2005, from images taken on October 21, 2003.</p>
+	</li>
+</ul></div>
+
+<figure style="width: 100%; margin: 0;"><img src="resources/images/obliquity.jpg" width="100%" style="margin-top: -1em;" /><span class="figcaption">Comparing tilt of axis</span></figure>
+<h2>Technology</h2>
+<p>For millenia, technology was critical for the observation of the stars and planets. This includes the invention of the astronomical telescope by Galileo, which was fundamental to his proof for the heliocentric model and the fundamentals of this invention is perverse throughout the modern array of astronomy tools.</p>
+<p>In the recent century, rocket propulsion and extraterrestrial travel became possible. Satellites have been sent into orbit around our Earth, giving us our first pictures on what our planet looks like.</p>
+<p>As well as this major feat, probes have been sent to orbit and land on the Moon, and beyond to other planets. Satellites have been sent to orbit for observational purposes as well, including the <i>Hubble Space Telescope,</i> a megaproject that included numerous launches to make the most powerful optical telescope so far. Its great advantage is that there is no interference from atmospheric effects e.g. such as cloud cover, light refraction.</p>
+
+<h3>Extraterrestrial spacecraft</h3>
+<p>Extraterrestrial spacecraft are spacecraft which has been sent out of Earth's orbit; this includes the orbit of the Sun, other planets and their moons, and our own Moon as well. The reasons they have been sent are numerous, and they include:</p><ul>
+	<li>to observe other celestial bodies closely and with higher resolution.</li>
+	<li>to be able to analyse many properties not possible or more accurately than from Earth, such as the pressure of the body's atmosphere, or the mass of the body.</li>
+	<li>to be able to land probes and do more scientific analysis.</li>
+	<li>to return physical samples of the planet or moon's rock or so on.</li>
+</ul><p>As of 2015, all planets and some dwarf planets has been visited by extraterrestrial spacecraft, with many varying types of features and equipment. A list of common components of an exploratory spacecraft are:</p><ul>
+	<li>a power source, possibly with batteries. This includes solar panels, and </li>
+	<li>communication antenna(e), possibly with parabolic reflectors to aim towards the Earth correctly.</li>
+	<li>manuevering jets, to orient the spacecraft towards some direction. These types of jets usually function by burning a monopropellent. (a type of fuel that can burn without an oxidiser e.g. oxygen gas.)</li>
+	<li>camera(s), which have numerous uses, including:<ul>
+		<li>observing targets, such as other celestial bodies.
+		<li>observing the stars so it can calculate its relative orientation and e.g. aim its antenna(e) correctly for communications with Earth.</li>
+		<li>performing light spectroscopy to determine atmospheric contents or otherwise detect chemical compounds.</li>
+	</ul></li>
+</ul>
+
+<h3>Observational spacecraft</h3>
+<p>Observational spacecraft can be defined as spacecraft which do not travel to its target in order to observe it, and a number of such notable satellites exists, including:</p><ul>
+	<li><i>Hubble Space Telescope:</i> One of the largest space telescope projects ever taken. The telescope has taken numerous iconic photographs, including of many nebulae, galaxies, and so on. It was assembled and then repaired on numerous trips by astronauts travelling by space shuttle.</li>
+	<li><i>Kepler:</i> A satellite that was used to collect data on over 100 billion stars in our galaxy, which was used to gain a picture of our own Milky Way. The data is necessary and it has shown numerous disparities in the orbit speeds (with the orbit speed implying significantly more mass than there is from regular matter) and gives suggestion to the possibility of some <i>"dark matter."</i></li>
+	<li><i>Planck:</i> Planck is the latest in a series of satellites designed to detect the <i>Cosmic Microwave Background,</i> (CMB) radio signals which are a remnant of the Big Bang. Planck's data is the latest and the most high-resolution data of the CMB that we have as of 2015.</li>
+</ul>
+<h2>Celestial bodies</h2>
+<p>There are many types of celestial bodies in the universe, and of many different types. The principle force however that bind all of these matter together is the force of gravity. A list of the types of celestial bodies are:</p><ul>
+	<li><i>Comets and asteroids</i>: Relatively small rocky bodies.</li>
+	<li><i>Rocky planets</i>: Planets composed primarily of solid substances, such as iron, rock and so on. Planets differ from comets or asteroids in that they have sufficient gravity to form a round, spherical shape.</li>
+	<li><i>Gas giants</i>.</li>
+	<li><i>Stars</i>: A giant ball of plasma consisting various types of elements, but primarily hydrogen and helium, that generates heat from nuclear reactions.</li>
+	<li><i>Black holes & quasars</i>.</li>
+	<li><i>Neutron stars</i>.</li>
+</ul>
+<h2>Project details</h2>
+<p><b><i>The Universe on the Web</i></b> was created in 1 to 2 weeks by two students as a science fair project. The project's authors are:</p>
+<ul style="margin-bottom: 0; padding-bottom: 1em;">
+	<li><b>Mahdi Kabir.</b><br /><div style="padding-left: 2em;"><span>Responsible for content, imagery and design input.</span></li>
+	<li><b>Nahiyan.</b><br /><div style="padding-left: 2em;"><span>Responsible for coding, implementation and some design input.</span></li>
+</ul>
+	</body>
+</html>

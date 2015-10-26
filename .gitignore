@@ -1,0 +1,11 @@
+## Ignore the dropbox file.
+.dropbox
+
+## Ignore temporary work files.
+content.txt
+resources/todo.txt
+resources/*.doc
+resources/*.docx
+resources/*.ppt
+resources/*.pptx
+resources/samples/

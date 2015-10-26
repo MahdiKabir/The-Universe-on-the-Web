@@ -1,0 +1,14 @@
+This is a rough idea, so please do change things here! - Nahiyan
+
+1. Header picture. Something stylish, like a picture overlooking the Earth or the Sun. A caption for the image.
+2. Introduction to the project, the universe and the scientific advances in the past age and what's to come.
+3. Table of contents. Possibly aligned to the right to allow space for other content.
+4. History.
+5. Overall layout of the universe, from planets, to planetary systems, to solar systems, to galaxies, to galactic clusters, the Virgo supercluster, the observable universe.
+6. Technology as tools for astronomy. History, current, future. Map of all planets with their exploratory satellites & probes. A list of observatory telescopes satellites. Communication networks (Deep Space Network/DSN. http://deepspace.jpl.nasa.gov/dsnnow/)
+7. Gallery of planets. Click a planet to show its picture, description, small facts (mass, orbital distance, etc.) in a table and other details such as number of objects orbitting it.
+8. The milky way, the orbital mechanics playing in, supermassive blackhole at the centre, the role of dark matter (how dark matter was deduced to exist -- observed orbital speeds of stars from x distance do not match with predicted speeds). Lastly, other galaxies in comparison?
+9. Galactic clusters.
+10. Credits, footer. Possibly some very inspirational quotes.
+
+This is very incomplete currently! - Nahiyan
