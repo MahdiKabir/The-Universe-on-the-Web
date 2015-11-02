@@ -5,7 +5,8 @@
 		<meta charset="utf-8" content="">
 		<link rel="stylesheet" href="stylesheet.css" />
 		<script type="text/javascript" src="jquery.min.js"></script>
-		<script type="text/javascript" src="unslider.min.js"></script>
+		<script type="text/javascript" src="unslider.js"></script>
+		<script type="text/javascript" src="smoothscroll.js"></script>
 		
 		<script type="text/javascript">
 			$(document).ready(function() {
@@ -23,21 +24,9 @@
 				onResize();
 				onScroll();
 				
-				//body.style.width = (viewport().width) + "px";
-				
-				var len_i = slideshows.length;
-				for (var i = 0; i < len_i; i++)
-				{
-					var unslider = $(slideshows[i]).unslider();
-					var data = unslider.data('unslider');
-					data.move(0);
-					data.stop();
-					//data.prev();
-				}
-				
 				$('.data-slideshow').unslider({
 					speed: 100000,
-					delay: 36000000,
+					delay: false,
 					keys: true,
 					dots: false,
 					arrows: false,
@@ -47,10 +36,7 @@
 				$('.slideshow-arrow').click(function() {
 					var classes = this.className.split(' ');
 					var ssid = '#' + classes[1], direction = classes[2];
-					var unslider = $(ssid).unslider();
-					var data = unslider.data('unslider');
-					
-					alert(direction);
+					var data = $(ssid).unslider().data('unslider');
 					
 					switch (direction)
 					{
@@ -59,8 +45,8 @@
 						case "next":
 							data.next();
 					}
-					data.stop();
-					$('#planets').ScrollTo();
+					
+					$(this).scrollTo();
 				});
 				
 				$(window).resize(function() {
@@ -96,9 +82,6 @@
 								break;
 						}
 					}
-					
-					//if (figure.style.width  !== "") new_width  = figure.style.width;
-					//if (figure.style.height !== "") new_height = figure.style.height;
 					
 					if (image_present)
 					{
@@ -215,8 +198,8 @@
 				<td><a href="#bottom" class="smoothscroll">Bottom</a></td>
 			</tr></table>-->
 		</header>
-		<img src="resources/header2.png" id="header-image" width="100%" style="margin-bottom: -4px;" />
-		<audio><source src="resources/relax-chillout.mp3" type="audio/mp3" /></audio>
+		<img src="resources/header.png" id="header-image" width="100%" style="margin-bottom: -4px;" />
+		<audio><source src="resources/relax-chillout.ogg" type="audio/ogg" /></audio>
 		<div id="content" class="division" width="100%">
 			<h2 style="font-family: 'Sansation'; font-weight: bold;">Welcome to the Universe on the Web.</h2>
 			<p style="margin-bottom: 1em;">This is a compendium of knowledge, illustrations and imagery, of the entire Universe, on the fields of cosmology, astronomy and the technology used to carry out the studies on these fields. This compendium of information has been designed to give critical information on the most important aspects of the universe and the technology used in a concise and straightforward manner. The authors of the compendium welcomes you to... <span style="font-style: italic; font-weight: bold;">The Universe on the Web.</span></p>
@@ -235,10 +218,10 @@
 	<li>Galileo (1564–1642) was a strong supporter of Copernicus’s ideas, and in 1609 he used a telescope for the first time to make detailed observations of the Moon and planets; his observations exposed errors in the geocentric model</li>
 	<li>Tycho Brahe (1546–1601) didn’t support the heliocentric theory and took numerous detailed measurements of the positions of stars and planets in an attempt to improve the geocentric model</li>
 	<li>His assistant, German astronomer Johannes Kepler (1571–1630) finally showed the heliocentric model was correct using Tycho Brahe's data. His observations and findings are now called <span style="font-style: italic;">Kepler's Laws of Planetary Motion.</span></li>
-	<figure style="float: right;"><img src="resources/images/history/Heliocentric.jpg" style="width: 400px;" /><span class="figcaption">The heliocentric model.</span></figure>
 	<li>Sir Isaac Newton (1643-1747), famous for "discovering gravity", published his <i>Philosophiæ Naturalis Principia Mathematica</i> ("the Principia") and along with it, <b>Newton's laws of universal gravitation</b> which expanded upon Kepler's laws and provided the possibility for more thorough mathematical analysis. His laws of gravitation, stated as <i>"any two bodies in the universe attract each other with a force that is directly proportional to the product of their masses and inversely proportional to the square of the distance between them,"</i> was finally confirmed by the famous <i>Cavendish experiement</i> 111 years after the publication of the Principia.</li>
 	<li>Albert Einstein (1879-1955), in a set of phenomenal papers in 1905 while he was working as a patent clerk, proved among other things, <i>the theory of special relativity</i> and the <i>mass-energy equivalence.</i> The first had proven that time passes slower relatively to other objects when the objects are moving relatively, and that it was the solution for the mystery of the orbit of Mercury. Special relativity, along with the mass-energy equivalence, also opened up the theoretical possibility of <i>black holes.</i></li>
 </ul>
+<figure style="float: right;"><img src="resources/images/history/Heliocentric.jpg" style="width: 400px;" /><span class="figcaption">The heliocentric model.</span></figure>
 <h3>The solar system</h3><ul>
 	<li>The term <i>‘solar system’</i> takes its name from the object at the centre of it all—the Sun, also known as Sol.</li>
 	<li>The nine planets of the solar system, in order starting from closest to the Sun, are: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune and Pluto (now known as a dwarf planet).</li>
@@ -255,12 +238,14 @@
 	<li>All planets move in the same plane (a large imaginary flat surface) except for Pluto, whose orbit is tilted by about 17° compared to the other planets’ orbits</li>
 </ul>
 <img src="resources/images/outer_orb.jpg" width="100%" />
-<div style="background-color: #222222; margin-bottom: 0; padding-left: 0; padding-bottom: 0.6em; width: 100%; text-align: center; color: white;" >
-	<h3 style="display: inline-block; margin-bottom: 0;">THE SOLAR SYSTEM</h3><br /><small style="font-size: 0.8em;">(press keyboard arrow keys)</small>
+<div style="background-color: #222222; margin-bottom: 0; padding-left: 0; width: 100%; height: 64px; text-align: center; vertical-align: middle;" >
+	<a href="#planets" class="slideshow-arrow planets prev" style="display: inline-block; text-align: left;"><img src="resources/icons/backward.png" /></a>
+	<span style="display: inline-block; color: white;"><h3 style="margin-bottom: 0;">THE SOLAR SYSTEM</h3><span style="font-size: 0.8em;">(press keyboard arrow keys)</span></span>
+	<a href="#planets" class="slideshow-arrow planets next" style="display: inline-block; text-align: right;"><img src="resources/icons/forward.png" /></a>
 </div>
 <div id="planets" class="data-slideshow"><ul>
 	<li>
-		<div class="slideshow-header" id="sun"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Sun</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-header" id="sun"><h3>Sun</h3></div>
 		<div class="slideshow-figures">
 			<figure><img src="resources/images/Sun920607.jpg" /><span class="figcaption"></span></figure> 
 			<table><tr><th>Mythology</th><td>The Sun God. Greeks Called it <i>Hellos.</i></td></tr>
@@ -284,7 +269,7 @@
 		</ul>
 	</li>
 	<li>
-		<div class="slideshow-header" id="mercury"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Mercury</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-header" id="mercury"><h3>Mercury</h3></div>
 		<div class="slideshow-figures">
 			<figure><img src="resources/images/Reprocessed_Mariner_10_image_of_Mercury.jpg" /><span class="figcaption"></span></figure> 
 			<table><tr><th>Mythology</th><td>God of travel, commerce and thieves.</td></tr>
@@ -308,9 +293,9 @@
 		</ul>
 	</li>
 	<li>
-		<div class="slideshow-header" id="venus"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Venus</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-header" id="venus"><h3>Venus</h3></div>
 		<div class="slideshow-figures">
-			<figure><img src="resources/images/Venus-real.jpg" /><span class="figcaption"></span></figure> 
+			<figure><img src="resources/images/venus-transit-17898.jpg" /><span class="figcaption"></span></figure> 
 			<table><tr><th>Mythology</th><td>Goddess of love and beauty.</td></tr>
 			<tr><th>Mass</th><td>0.815 times that of Earth</td></tr>
 			<tr><th>Moons</th><td>None</td></tr>
@@ -329,7 +314,7 @@
 		</ul>
 	</li>
 	<li>
-		<div class="slideshow-header" id="earth"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Earth</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-header" id="earth"><h3>Earth</h3></div>
 		<div class="slideshow-figures">
 			<figure><img src="resources/images/earth/The_Earth_seen_from_Apollo_17.jpg" /><span class="figcaption"><span style="font-style: italic; font-weight: bold;">The Blue Marble</span> is a famous photograph of the Earth, taken on December 7th, 1972, by the crew of the <span style="font-style: italic;">Apollo 17</span> spacecraft at a distance of about 45,000 kilometers. It is one of the most iconic, and among the most widely distributed images in human history.</span></figure> 
 			<table><tr><th>Mythology</th><td>Gaia — Mother Earth</td></tr>
@@ -370,7 +355,7 @@
 		</ul>
 	</li>
 	<li>
-		<div class="slideshow-header" id="moon"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>The Moon</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-header" id="moon"><h3>The Moon</h3></div>
 		<div class="slideshow-figures">
 			<figure><img src="resources/images/FullMoon2010.jpg" /><span class="figcaption">A <i>full moon,</i> as seen from Earth's northern hemisphere.</span></figure> 
 			<table><tr><th>Mythology</th><td>God of the night</td></tr>
@@ -418,7 +403,7 @@
 		<figure style="float: right; width: 400px; height: auto;"><img src="resources/images/Eclipse_fromISS_2006-03-29.jpg" style="width: 400px;" /><span class="figcaption">A photograph of the Earth from the <i>International Space Station,</i> taken on March 29th, 2006.</span></figure>-->
 	</li>
 	<li>
-		<div class="slideshow-header" id="mars"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Mars</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-header" id="mars"><h3>Mars</h3></div>
 		<div class="slideshow-figures">
 			<figure><img src="resources/images/2005-1103mars-full.jpg" /><span class="figcaption">A picture of Mars, "The Red Planet." A blue aurora can be seen at its north pole; caused by collision of solar or charged particles with the atmosphere's air molecules. It is observed only at the poles as the charged particles are deflected and "guided" by the planet's magnetic field lines towards and into the poles.</span></figure> 
 			<table><tr><th>Mythology</th><td>God of war</td></tr>
@@ -445,7 +430,7 @@
 		</ul>
 	</li>
 	<li>
-		<div class="slideshow-header" id="jupiter"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Jupiter</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-header" id="jupiter"><h3>Jupiter</h3></div>
 		<div class="slideshow-figures">
 			<figure><img src="resources/images/Jupiter.jpg" /><span class="figcaption">A picture of Jupiter. The hue of the surface is seen as varying with longtitude, and with low magnification, the details of the surface can be lost. The large round storm near the bottom-left of the planet is the <i>"Big Red Dot."</i></span></figure> 
 			<table><tr><th>Mythology</th><td>Ruler of the Gods</td></tr>
@@ -473,7 +458,7 @@
 		</ul>
 	</li>
 	<li>
-		<div class="slideshow-header" id="saturn"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Saturn</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-header" id="saturn"><h3>Saturn</h3></div>
 		<div class="slideshow-figures">
 			<figure><img src="resources/images/Saturn_from_Cassini_Orbiter_%282007-01-19%29.jpg" /><span class="figcaption">A photograph of Saturn, captured by the Cassini Orbiter on January 19th, 2007.</span></figure> 
 			<table><tr><th>Mythology</th><td>God of agriculture</td></tr>
@@ -500,7 +485,7 @@
 		</ul>
 	</li>
 	<li>
-		<div class="slideshow-header" id="uranus"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Uranus</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-header" id="uranus"><h3>Uranus</h3></div>
 		<div class="slideshow-figures">
 			<figure><img src="resources/images/Uranusandrings.jpg" /><span class="figcaption"></span></figure> 
 			<table><tr><th>Mythology</th><td>Father of Saturn</td></tr>
@@ -522,7 +507,7 @@
 		</ul>
 	</li>
 	<li>
-		<div class="slideshow-header" id="neptune"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Neptune</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-header" id="neptune"><h3>Neptune</h3></div>
 		<div class="slideshow-figures">
 			<figure><img src="resources/images/Neptune.jpg" /><span class="figcaption"></span></figure> 
 			<table><tr><th>Mythology</th><td>God of the sea</td></tr>
@@ -539,7 +524,7 @@
 		</div>
 	</li>
 	<li>
-		<div class="slideshow-header" id="pluto"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Pluto (dwarf planet)</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-header" id="pluto"><h3>Pluto (dwarf planet)</h3></div>
 		<div class="slideshow-figures">
 			<figure><img src="resources/images/Pluto.jpg" /><span class="figcaption"></span></figure>
 			<table><tr><th>Mythology</th><td>God of the underworld</td></tr>
@@ -558,7 +543,7 @@
 		<p>In July 2015, ten years after launching, the New Horizons spacecraft captured the first up-close imagery of Pluto, its moons and will continue to also record findings from a region of the outer solar system called the Kuiper Belt. So far, only the New Horizons spacecraft has reached Pluto.</p>
 	</li>
 	<li>
-		<div class="slideshow-header" id="eris"><a href="#planets" class="slideshow-arrow planets prev"><img src="resources/icons/backward.png" /></a><h3>Eris (dwarf planet)</h3><a href="#planets" class="slideshow-arrow planets next"><img src="resources/icons/forward.png" /></a></div>
+		<div class="slideshow-header" id="eris"><h3>Eris (dwarf planet)</h3></div>
 		<div class="slideshow-figures">
 			<figure><img src="resources/images/Eris_and_dysnomia2.jpg" /><span class="figcaption">Eris (centre) and Dysnomia (lower-left).</span></figure>
 			<table><tr><th>Mythology</th><td>Greek goddess of strife</td></tr>
@@ -614,7 +599,7 @@
 	<li><i>Neutron stars</i>.</li>
 </ul>
 <h2>Project details</h2>
-<p><b><i>The Universe on the Web</i></b> was created in 1 to 2 weeks by two students as a science fair project. The project's authors are:</p>
+<p><b><i>The Universe on the Web</i></b> was created in 1 to 2 weeks by two students as a science fair project. Continuing afterwards, the project continues to be worked on in pursuit of completion. The project's authors are:</p>
 <ul style="margin-bottom: 0; padding-bottom: 1em;">
 	<li><b>Mahdi Kabir.</b><br /><div style="padding-left: 2em;"><span>Responsible for content, imagery and design input.</span></li>
 	<li><b>Nahiyan.</b><br /><div style="padding-left: 2em;"><span>Responsible for coding, implementation and some design input.</span></li>
