@@ -19,13 +19,14 @@
 				var slideshows = document.getElementsByClassName('data-slideshow');
 				var body = document.getElementsByTagName('body')[0];
 				
-				$(window).resize(onResize);
-				$(window).scroll(onScroll);
+				var resize_timer, scroll_timer;
+				$(window).resize(function() {clearTimeout(resize_timer); resize_timer = setTimeout(onResize, 100);});
+				$(window).scroll(function() {clearTimeout(scroll_timer); scroll_timer = setTimeout(onScroll, 100);});
 				onResize();
 				onScroll();
 				
 				$('.data-slideshow').unslider({
-					speed: 100000,
+					speed: 500,
 					delay: false,
 					keys: true,
 					dots: false,
@@ -49,56 +50,55 @@
 					$(this).scrollTo();
 				});
 				
-				$(window).resize(function() {
+				$(window).bind('resize', function () {
+				});
+				
+				function updateFigures()
+				{
 					var len_i = figures.length;
 					for (var i = 0; i < len_i; i++)
 					{
-						updateFigure(figures[i]);
-					}
-				});
-				
-				function updateFigure(figure)
-				{
-					var image_present = false;
-					var caption_present = false;
-					var new_height = 0, new_width = 0;
-					var fig_img, fig_cap;
-					
-					var len_j = figure.children.length;
-					for (var j = 0; j < len_j; j++)
-					{
-						switch (figure.children[j].tagName)
+						var image_present = false;
+						var caption_present = false;
+						var new_height = 0, new_width = 0;
+						var fig_img, fig_cap;
+						
+						var len_j = figures[i].children.length;
+						for (var j = 0; j < len_j; j++)
 						{
-							case "IMG":
-								if (figure.children[j].src !== null)
-								{
-									image_present = true;
-									fig_img = figure.children[j];
-								}
-								break;
-							case "SPAN":
-								caption_present = true;
-								fig_cap = figure.children[j];
-								break;
+							switch (figures[i].children[j].tagName)
+							{
+								case "IMG":
+									if (figures[i].children[j].src !== null)
+									{
+										image_present = true;
+										fig_img = figures[i].children[j];
+									}
+									break;
+								case "SPAN":
+									caption_present = true;
+									fig_cap = figures[i].children[j];
+									break;
+							}
 						}
-					}
-					
-					if (image_present)
-					{
-						var img_width = toString(new_width), img_height = toString(new_height);
 						
-						if (fig_img.style.width  !== "") img_width  = fig_img.style.width;
-							else img_width  = fig_img.width + "px";
-						if (fig_img.style.height !== "") img_height = fig_img.style.height;
-							else img_height = fig_img.height + "px";
+						if (image_present)
+						{
+							var img_width = toString(new_width), img_height = toString(new_height);
+							
+							if (fig_img.style.width  !== "") img_width  = fig_img.style.width;
+								else img_width  = fig_img.width + "px";
+							if (fig_img.style.height !== "") img_height = fig_img.style.height;
+								else img_height = fig_img.height + "px";
+							
+							figures[i].style.width  = img_width;
+							figures[i].style.height = img_height;
+						}
 						
-						figure.style.width  = img_width;
-						figure.style.height = img_height;
-					}
-					
-					if (caption_present)
-					{
-						fig_cap.style.width = (new_width - 24) + "px";
+						if (caption_present)
+						{
+							fig_cap.style.width = (new_width - 24) + "px";
+						}
 					}
 				}
 				
@@ -119,6 +119,7 @@
 				
 				function onScroll()
 				{
+					// Update the page title/header.
 					if ($(window).scrollLeft > 0)
 						window.scrollTo(0, $(window).scrollTop);
 					
@@ -162,6 +163,9 @@
 				// Limit image widths to maximum screen width.
 				function onResize()
 				{
+					// Call specific element handlers.
+					updateFigures();
+					
 					function viewport()
 					{
 						var w=window, d=document, e=d.documentElement, g=d.getElementsByTagName('body')[0];
@@ -204,7 +208,7 @@
 			<h2 style="font-family: 'Sansation'; font-weight: bold;">Welcome to the Universe on the Web.</h2>
 			<p style="margin-bottom: 1em;">This is a compendium of knowledge, illustrations and imagery, of the entire Universe, on the fields of cosmology, astronomy and the technology used to carry out the studies on these fields. This compendium of information has been designed to give critical information on the most important aspects of the universe and the technology used in a concise and straightforward manner. The authors of the compendium welcomes you to... <span style="font-style: italic; font-weight: bold;">The Universe on the Web.</span></p>
 <h2>The Solar System</h2>
-<figure style="width: 100%; margin: 0;"><img src="resources/images/solarsys_scale.jpg" width="100%" style="margin-top: -1em;" /><span class="figcaption">The planets to scale. The rings of the gas giants are not shown. (Distance between objects not to scale)</span></figure>
+<figure style="width: 100%; margin: 0;"><img src="resources/images/solarsys_scale.jpg" width="100%" /><span class="figcaption">The planets to scale. The rings of the gas giants are not shown. (Distance between objects not to scale)</span></figure>
 <figure style="float: right;"><img src="resources/images/history/Ptolemaicsystem-small.png" style="width: 400px;" /><span class="figcaption">The geocentric model.</span></figure>
 <p>For thousands of years ancient astronomers saw points of light that appeared to move among the stars. They called these <i><i>‘planets’</i></i>, meaning <i><i>‘wanderers’</i></i>, and named them after the Roman gods. If you look up at a clear night sky, you too will be able to see many of the planets that the ancient astronomers saw. You might also see an assortment of space junk and satellites that also move in the night sky.</p>
 <h3>Theories of the solar system</h3>
@@ -239,9 +243,9 @@
 </ul>
 <img src="resources/images/outer_orb.jpg" width="100%" />
 <div style="background-color: #222222; margin-bottom: 0; padding-left: 0; width: 100%; height: 64px; text-align: center; vertical-align: middle;" >
-	<a href="#planets" class="slideshow-arrow planets prev" style="display: inline-block; text-align: left;"><img src="resources/icons/backward.png" /></a>
+	<a href="#" class="slideshow-arrow planets prev" style="display: inline-block; text-align: left;"><img src="resources/icons/backward.png" /></a>
 	<span style="display: inline-block; color: white;"><h3 style="margin-bottom: 0;">THE SOLAR SYSTEM</h3><span style="font-size: 0.8em;">(press keyboard arrow keys)</span></span>
-	<a href="#planets" class="slideshow-arrow planets next" style="display: inline-block; text-align: right;"><img src="resources/icons/forward.png" /></a>
+	<a href="#" class="slideshow-arrow planets next" style="display: inline-block; text-align: right;"><img src="resources/icons/forward.png" /></a>
 </div>
 <div id="planets" class="data-slideshow"><ul>
 	<li>
@@ -487,7 +491,7 @@
 	<li>
 		<div class="slideshow-header" id="uranus"><h3>Uranus</h3></div>
 		<div class="slideshow-figures">
-			<figure><img src="resources/images/Uranusandrings.jpg" /><span class="figcaption"></span></figure> 
+			<figure><img src="resources/images/Uranus_as_seen_by_NASA's_Voyager_2.jpg" /><span class="figcaption">A photograph of Neptune, captured by the <i>Voyager 2</i> spacecraft on December 18th, 1986. </span></figure>
 			<table><tr><th>Mythology</th><td>Father of Saturn</td></tr>
 			<tr><th>Mass</th><td>14.54 times that of Earth</td></tr>
 			<tr><th>Moons</th><td>At least 21 moons and 11 rings</td></tr>
@@ -500,6 +504,7 @@
 			<tr><th>Distance from Sun</th><td>19.2 AU (2875 million kilometres)</td></tr>
 			<tr><th>Time to orbit Sun</th><td>84 Earth years</table>
 		</div>
+		<figure style="width: 400px; float: right;"><img src="resources/images/Uranusandrings.jpg" /><span class="figcaption"></span></figure>
 		<h4>Key points</h4><ul>
 			<li>Uranus is one of the four gas giants in our solar system.</li>
 			<li>It also has rings; however they are not as prominent as Saturn's rings. It's composed mostly of ice particles.</li>
@@ -562,7 +567,7 @@
 
 <figure style="width: 100%; margin: 0;"><img src="resources/images/obliquity.jpg" width="100%" style="margin-top: -1em;" /><span class="figcaption">Comparing tilt of axis</span></figure>
 <h2>Technology</h2>
-<p>For millenia, technology was critical for the observation of the stars and planets. This includes the invention of the astronomical telescope by Galileo, which was fundamental to his proof for the heliocentric model and the fundamentals of this invention is perverse throughout the modern array of astronomy tools.</p>
+<p>For millenia, technology has been critical for the observation of the stars and planets. This includes the invention of the astronomical telescope by Galileo, which was fundamental to his proof for the heliocentric model and the fundamentals of this invention is perverse throughout the modern array of astronomy tools.</p>
 <p>In the recent century, rocket propulsion and extraterrestrial travel became possible. Satellites have been sent into orbit around our Earth, giving us our first pictures on what our planet looks like.</p>
 <p>As well as this major feat, probes have been sent to orbit and land on the Moon, and beyond to other planets. Satellites have been sent to orbit for observational purposes as well, including the <i>Hubble Space Telescope,</i> a megaproject that included numerous launches to make the most powerful optical telescope so far. Its great advantage is that there is no interference from atmospheric effects e.g. such as cloud cover, light refraction.</p>
 
@@ -573,7 +578,7 @@
 	<li>to be able to land probes and do more scientific analysis.</li>
 	<li>to return physical samples of the planet or moon's rock or so on.</li>
 </ul><p>As of 2015, all planets and some dwarf planets has been visited by extraterrestrial spacecraft, with many varying types of features and equipment. A list of common components of an exploratory spacecraft are:</p><ul>
-	<li>a power source, possibly with batteries. This includes solar panels, and </li>
+	<li>a power source, possibly with batteries. This includes solar panels, and radioisotope thermoelectric generators (which exploits the heat released by radioactive substances)</li>
 	<li>communication antenna(e), possibly with parabolic reflectors to aim towards the Earth correctly.</li>
 	<li>manuevering jets, to orient the spacecraft towards some direction. These types of jets usually function by burning a monopropellent. (a type of fuel that can burn without an oxidiser e.g. oxygen gas.)</li>
 	<li>camera(s), which have numerous uses, including:<ul>

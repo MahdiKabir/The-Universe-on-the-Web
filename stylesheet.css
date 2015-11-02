@@ -298,7 +298,6 @@ div.data-slideshow {
 	padding-left: 0 !important;
 	position: relative;
 	overflow: auto;
-	min-height: 10em;
 }
 div.data-slideshow>ul {
 	margin-top: 0;
