@@ -7,249 +7,88 @@
 		<script type="text/javascript" src="jquery.min.js"></script>
 		<script type="text/javascript" src="unslider.js"></script>
 		<script type="text/javascript" src="smoothscroll.js"></script>
-		
-		<script type="text/javascript">
-			$(document).ready(function() {
-				var header = document.getElementsByTagName('header')[0];
-				var header_image = document.getElementById('header-image');
-				var title = document.getElementById('title');
-				//var navigator = document.getElementById('navigator');
-				var content = document.getElementById('content');
-				var figures = document.getElementsByTagName('figure');
-				var slideshows = document.getElementsByClassName('data-slideshow');
-				var body = document.getElementsByTagName('body')[0];
-				
-				var resize_timer, scroll_timer;
-				$(window).resize(function() {clearTimeout(resize_timer); resize_timer = setTimeout(onResize, 100);});
-				$(window).scroll(function() {clearTimeout(scroll_timer); scroll_timer = setTimeout(onScroll, 100);});
-				onResize();
-				onScroll();
-				
-				$('.data-slideshow').unslider({
-					speed: 500,
-					delay: false,
-					keys: true,
-					dots: false,
-					arrows: false,
-					autoplay: false
-				});
-				
-				$('.slideshow-arrow').click(function() {
-					var classes = this.className.split(' ');
-					var ssid = '#' + classes[1], direction = classes[2];
-					var data = $(ssid).unslider().data('unslider');
-					
-					switch (direction)
-					{
-						case "prev":
-							data.prev();
-						case "next":
-							data.next();
-					}
-					
-					$(this).scrollTo();
-				});
-				
-				$(window).bind('resize', function () {
-				});
-				
-				function updateFigures()
-				{
-					var len_i = figures.length;
-					for (var i = 0; i < len_i; i++)
-					{
-						var image_present = false;
-						var caption_present = false;
-						var new_height = 0, new_width = 0;
-						var fig_img, fig_cap;
-						
-						var len_j = figures[i].children.length;
-						for (var j = 0; j < len_j; j++)
-						{
-							switch (figures[i].children[j].tagName)
-							{
-								case "IMG":
-									if (figures[i].children[j].src !== null)
-									{
-										image_present = true;
-										fig_img = figures[i].children[j];
-									}
-									break;
-								case "SPAN":
-									caption_present = true;
-									fig_cap = figures[i].children[j];
-									break;
-							}
-						}
-						
-						if (image_present)
-						{
-							var img_width = toString(new_width), img_height = toString(new_height);
-							
-							if (fig_img.style.width  !== "") img_width  = fig_img.style.width;
-								else img_width  = fig_img.width + "px";
-							if (fig_img.style.height !== "") img_height = fig_img.style.height;
-								else img_height = fig_img.height + "px";
-							
-							figures[i].style.width  = img_width;
-							figures[i].style.height = img_height;
-						}
-						
-						if (caption_present)
-						{
-							fig_cap.style.width = (new_width - 24) + "px";
-						}
-					}
-				}
-				
-				/*len_i = slideshows.length;
-				for (var i = 0; i < len_i; i++)
-				{
-					var ssheaders = slideshows.getElementsBySelector('div>div');
-					
-					var len_j = ssheaders.length;
-					for (var j = 0; j < len_j; j++)
-					{
-						ssheaders.add
-						
-					}
-				
-				
-				}*/
-				
-				function onScroll()
-				{
-					// Update the page title/header.
-					if ($(window).scrollLeft > 0)
-						window.scrollTo(0, $(window).scrollTop);
-					
-					var beyondTrigger = isScrolledBeyond(header_image, 78);
-					var heightTitle = title.scrollHeight;
-					//var navigator_timeout;
-					
-					if (checkChange(beyondTrigger))
-					{
-						if (beyondTrigger > 0)
-						{
-							title.className = "title-animate";
-							header.className = "header-animate";
-							//navigator.style.display = "";
-						} else {
-							title.className = "";
-							header.className = "";
-							//navigator.style.display = "none";
-						}
-					}
-					
-					function isScrolledBeyond(elem, offset)
-					{
-						return (Math.max(($(window).scrollTop() + offset) - ($(elem).offset().top + $(elem).height()), 0));
-					}
-					
-					function checkChange(now)
-					{
-						var now_bool = now > 0;
-						
-						if (typeof this.last_change === 'undefined' || this.last_change !== now_bool)
-						{
-							this.last_change = now_bool;
-							return true;
-						}
-						
-						return false;
-					}
-				}
-				
-				// Limit image widths to maximum screen width.
-				function onResize()
-				{
-					// Call specific element handlers.
-					updateFigures();
-					
-					function viewport()
-					{
-						var w=window, d=document, e=d.documentElement, g=d.getElementsByTagName('body')[0];
-						return { width : (w.innerWidth||e.clientWidth||g.clientWidth), height : (w.innerHeight||e.clientHeight||g.clientHeight) };
-					}
-					
-					var bounds = viewport()
-					
-					if (title.classname === "")
-						title.style.marginLeft = -bounds.width + "px"
-					
-					// Resize images.
-					var images = document.getElementsByTagName('img');
-					for (var i in images)
-					{
-						var maxWidth = bounds.width;
-						/*
-						if (images[i].naturalWidth > maxWidth)
-							images[i].style.width = "100%";//maxWidth + "px";*/
-					}
-				}
-				
-				function simulateKeyPress(character) {
-					jQuery.event.trigger({ type : 'keypress', which : character.charCodeAt(0) });
-				}
-			});
-		</script>
+		<script type="text/javascript" src="common.js"></script>
 	</head>
 	<body>
 		<header>
-			<h2 id="title">The Universe on the Web</h2><!--
-			<table id="navigator" style="display: none;"><tr>
-				<td><a href="#top" class="smoothscroll">Back to top</a></td>
-				<td><a href="#bottom" class="smoothscroll">Bottom</a></td>
-			</tr></table>-->
+			<h2 id="title">The Universe on the Web</h2>
+			<table id="navigator"><tr> <!-- NOTE: class="smoothscroll" causes links to slideshow frames to fail. -->
+				<td><a href="#top" class="smoothscroll">Top</a></td>
+				<td><a href="#history" class="smoothscroll">History</a></td>
+				<td><a href="#solarsystem-slideshow" class="smoothscroll">Solar system</a></td>
+				<td><a href="#technology" class="smoothscroll">Technology</a></td>
+				<td><a href="#bottom" class="smoothscroll">Bottom</a></td><!--
+				<td><a href="#sun"><img src="resources/icons/sun.png" /><span>Sun</span></a></td>
+				<td><a href="#mercury"><img src="resources/icons/mercury.png" /><span>Mercury</span></a></td>
+				<td><a href="#venus"><img src="resources/icons/venus.png" /><span>Venus</span></a></td>
+				<td><a href="#earth"><img src="resources/icons/earth.png" /><span>Earth</span></a></td>
+				<td><a href="#moon"><img src="resources/icons/moon.png" /><span>Moon</span></a></td>
+				<td><a href="#mars"><img src="resources/icons/mars.png" /><span>Mars</span></a></td>
+				<td><a href="#jupiter"><img src="resources/icons/jupiter.png" /><span>Jupiter</span></a></td>
+				<td><a href="#saturn"><img src="resources/icons/saturn.png" /><span>Saturn</span></a></td>
+				<td><a href="#uranus"><img src="resources/icons/uranus.png" /><span>Uranus</span></a></td>
+				<td><a href="#neptune"><img src="resources/icons/neptune.png" /><span>Neptune</span></a></td>
+				<td><a href="#pluto"><img src="resources/icons/pluto.png" /><span>Pluto</span></a></td>-->
+			</tr></table>
 		</header>
 		<img src="resources/header.png" id="header-image" width="100%" style="margin-bottom: -4px;" />
-		<audio><source src="resources/relax-chillout.ogg" type="audio/ogg" /></audio>
 		<div id="content" class="division" width="100%">
-			<h2 style="font-family: 'Sansation'; font-weight: bold;">Welcome to the Universe on the Web.</h2>
-			<p style="margin-bottom: 1em;">This is a compendium of knowledge, illustrations and imagery, of the entire Universe, on the fields of cosmology, astronomy and the technology used to carry out the studies on these fields. This compendium of information has been designed to give critical information on the most important aspects of the universe and the technology used in a concise and straightforward manner. The authors of the compendium welcomes you to... <span style="font-style: italic; font-weight: bold;">The Universe on the Web.</span></p>
-<h2>The Solar System</h2>
-<figure style="width: 100%; margin: 0;"><img src="resources/images/solarsys_scale.jpg" width="100%" /><span class="figcaption">The planets to scale. The rings of the gas giants are not shown. (Distance between objects not to scale)</span></figure>
+			<h2>Introduction</h2>
+			<div style="display: inline-block; float: right; width: 20em; background-color: #2C2C2C; padding: 1em; margin: 1em; margin-right: 2.5em; border: 1px solid #606060;">Many cultures have long depended on their own disciplines of astronomy, which includes:<ul>
+			<li>Babylonian astronomy.</li>
+			<li>Chinese astronomy.</li>
+			<li>Egyptian astronomy.</li>
+			<li>Greek astronomy.</li>
+			<li>Indian astronomy.</li>
+			<li>Islamic astronomy.</li>
+			<li>Russian astronomy.</li></ul></div>
+			<p>This is a compendium of knowledge which has been created to teach people the most important aspects of our universe and the history of our exploration in a concise and straightforward manner.</p>
+			<p>The Universe consists of everything that is physical, consisting of the Earth, our solar system, the Milky Way galaxy and everything beyond, billions and billions of kilometres away from our home.</p>
+			<p>The scientific study of the universe is called <b>Astronomy</b>, a fundamental science based on theoretical physics, chemistry and mathematics. It asks questions about the very nature of the reality that we live in, and answers many questions that have confounded humanity for thousands of years; where the simplest question, <i>"Why does the sun come up?"</i> has been a much-asked and answered question of humanity, affecting cultures the world around. Astronomy is indeed one of the oldest natural sciences, with its roots in the religious, mythological, cosmological, <abbr title="calendrical - of, or relating to calenders">calendrical</abbr>, astrological beliefs and practices of pre-historical culture.</p>
+			<p>Astronomy has been incredibly useful, and was greatly depended upon by our ancestors in agrarian cultures, where many calenders were devised to correspond to seasons and thus, rain, drought and tides, the timing of all which is essential for farming. One of such is the Julian calender, which is divided into 12 months, of total 365 days. Today, it is the most popular calender in the world, and it is used throughout the world.</p>
+			<p style="padding-bottom: 1em;">Today, Astronomy has been one of the fastest advancing sciences of our age. From the mathematical description of gravity by <i>Sir Isaac Newton</i> from several centuries ago, to the discovery of the Big Bang in the last century, and many new advances and continuous research of today. Astronomy has had immeasurable benefit to our lives; not just to our state of today, but it has contributed directly to our journey into the modern age.</p>
+			
+<h2 id="history">History</h2>
+<figure style="width: 100%; margin: 0;"><img src="resources/images/solarsys_scale.jpg" width="100%" /><span class="figcaption">Our solar system's planets, with their relative diametres to scale. (Distance between objects not to scale)</span></figure>
 <figure style="float: right;"><img src="resources/images/history/Ptolemaicsystem-small.png" style="width: 400px;" /><span class="figcaption">The geocentric model.</span></figure>
 <p>For thousands of years ancient astronomers saw points of light that appeared to move among the stars. They called these <i><i>‘planets’</i></i>, meaning <i><i>‘wanderers’</i></i>, and named them after the Roman gods. If you look up at a clear night sky, you too will be able to see many of the planets that the ancient astronomers saw. You might also see an assortment of space junk and satellites that also move in the night sky.</p>
 <h3>Theories of the solar system</h3>
 <ul>
 	<li><name>Pythagoras,</name> a Greek scientist who lived in the sixth century BC suggested that the Earth was the centre of the universe.</li>
-	<li><name>Aristotle</name> (384–322 BC), <name>Hipparchus</name> (died after <date>127 BC</date>) and Ptolemy (<date>127–145 AD</date>) proposed more detailed models in which Earth was placed at the centre of the solar system.</li>
+	<li><name>Aristotle</name> (<date>384–322 BC</date>), <name>Hipparchus</name> (died after <date>127 BC</date>) and Ptolemy (<date>127–145 AD</date>) proposed more detailed models in which Earth was placed at the centre of the solar system.</li>
 	<li>This type of model is known as the <b>Geocentric</b> (geo-earth) or the <b>Ptolemy model.</b></li>
-	<li>Another ancient Greek, <name>Aristarchus</name> (<period>310–230 BC</period>) questioned the geocentric model and proposed a model where the Earth and other planets revolved around the Sun. This is known as a <b>Heliocentric model.</b> (Helio, i.e. Sun)</li>
-	<li>The geocentric model continued to be favoured until the end of the fifteenth century</li>
-	<li>In the 1530s, Polish astronomer Nicolas Copernicus (1473–1543) agreed with Aristarchus</li>
-	<li>Galileo (1564–1642) was a strong supporter of Copernicus’s ideas, and in 1609 he used a telescope for the first time to make detailed observations of the Moon and planets; his observations exposed errors in the geocentric model</li>
-	<li>Tycho Brahe (1546–1601) didn’t support the heliocentric theory and took numerous detailed measurements of the positions of stars and planets in an attempt to improve the geocentric model</li>
-	<li>His assistant, German astronomer Johannes Kepler (1571–1630) finally showed the heliocentric model was correct using Tycho Brahe's data. His observations and findings are now called <span style="font-style: italic;">Kepler's Laws of Planetary Motion.</span></li>
-	<li>Sir Isaac Newton (1643-1747), famous for "discovering gravity", published his <i>Philosophiæ Naturalis Principia Mathematica</i> ("the Principia") and along with it, <b>Newton's laws of universal gravitation</b> which expanded upon Kepler's laws and provided the possibility for more thorough mathematical analysis. His laws of gravitation, stated as <i>"any two bodies in the universe attract each other with a force that is directly proportional to the product of their masses and inversely proportional to the square of the distance between them,"</i> was finally confirmed by the famous <i>Cavendish experiement</i> 111 years after the publication of the Principia.</li>
-	<li>Albert Einstein (1879-1955), in a set of phenomenal papers in 1905 while he was working as a patent clerk, proved among other things, <i>the theory of special relativity</i> and the <i>mass-energy equivalence.</i> The first had proven that time passes slower relatively to other objects when the objects are moving relatively, and that it was the solution for the mystery of the orbit of Mercury. Special relativity, along with the mass-energy equivalence, also opened up the theoretical possibility of <i>black holes.</i></li>
+	<li>Another ancient Greek, <name>Aristarchus</name> (<date>310–230 BC</date>) questioned the geocentric model and proposed a model where the Earth and other planets revolved around the Sun. This is known as a <b>Heliocentric model.</b> (Helio, i.e. Sun)</li>
+	<li>The geocentric model continued to be favoured until the end of the fifteenth century.</li>
+	<li>In the 1530s, Polish astronomer <name>Nicolas Copernicus</name> (<date>1473–1543 AD</date>) agreed with <name>Aristarchus.</name></li>
+	<li><name>Galileo Galilei</name> (<date>1564–1642 AD</date>) was a strong supporter of <name>Copernicus</name>’s ideas, and in 1609 he used a telescope for the first time to make detailed observations of the Moon and planets; his observations exposed errors in the geocentric model.</li>
+	<li><name>Tycho Brahe</name> (<date>1546–1601 AD</date>) didn’t support the heliocentric theory and took numerous detailed measurements of the positions of stars and planets in an attempt to improve the geocentric model</li>
+	<li>His assistant, German astronomer <name>Johannes Kepler</name> (<date>1571–1630 AD</date>) finally showed the heliocentric model was correct using <name>Tycho Brahe</name>'s data. His observations and findings are now called <i>Kepler's Laws of Planetary Motion.</i></li>
+	<li><name>Sir Isaac Newton</name> (<date>1643-1747 AD</date>), one of the most significant scientific figures in history, published his <i>Philosophiæ Naturalis Principia Mathematica</i> ("the Principia") and along with it, <b>Newton's laws of universal gravitation</b> which expanded upon Kepler's laws and provided the possibility for more thorough mathematical analysis. His laws of gravitation, stated as <i>"any two bodies in the universe attract each other with a force that is directly proportional to the product of their masses and inversely proportional to the square of the distance between them,"</i> was finally confirmed by the famous <i>Cavendish experiement</i> 111 years after the publication of the Principia.</li>
+	<li><name>Albert Einstein</name> (<date>1879-1955 AD</date>), in a set of phenomenal papers in 1905 while he was working as a patent clerk, proved among other things, <i>the theory of special relativity</i> and the <i>mass-energy equivalence.</i> The first had proven that time passes slower relatively to other objects when the objects are moving relatively, and that it was the solution for the mystery of the orbit of Mercury. Special relativity, along with the mass-energy equivalence, also opened up the theoretical possibility of <i>black holes.</i></li>
 </ul>
 <figure style="float: right;"><img src="resources/images/history/Heliocentric.jpg" style="width: 400px;" /><span class="figcaption">The heliocentric model.</span></figure>
 <h3>The solar system</h3><ul>
 	<li>The term <i>‘solar system’</i> takes its name from the object at the centre of it all—the Sun, also known as Sol.</li>
 	<li>The nine planets of the solar system, in order starting from closest to the Sun, are: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune and Pluto (now known as a dwarf planet).</li>
-	<li>A mnemonic device to remember the order could be: <u>M</u>y <u>V</u>ery <u>E</u>legant <u>M</u>other <u>J</u>ust <u>S</u>erved <u>U</u>s <u>N</u>ine <u>P</u>izzas</li>
 	<li>The planets each orbit the Sun, rotating on their axes as they do so.</li>
 	<li>The time taken for a planet to spin once on its axis is called its day, and the time taken to orbit the Sun once is called its year.</li>
 	<li>All the planets have days and years of different lengths.</li>
 </ul>
 <h3>How the planets move:</h3><ul>
 	<li>The gravitational attraction between the sun and a planet acts as a centripetal force to cause the planet to orbit in a circular pattern.</li>
-	<li>The inverse-square law allows the possibility of elliptical orbits, e.g. the orbit of <a href="#eris">Eris.</a> The amount of difference from a circular orbit can be quantified by the orbit's <i>ellipticity.</i></li>
+	<li>The inverse-square law allows the possibility of elliptical orbits, e.g. the orbits of comets. The amount of difference from a circular orbit can be quantified by the orbit's <i>ellipticity.</i></li>
 	<li>The four innermost planets are called terrestrial (meaning <i>‘Earth-like’</i>) and orbit the Sun in almost circular orbits</li>
 	<li>The larger outer planets — Jupiter, Saturn, Uranus and Neptune—are known as the gas giants (or Jovian planets), because their outer layers are composed of gases such as hydrogen and helium, and they move in elliptical or oval orbits</li>
 	<li>All planets move in the same plane (a large imaginary flat surface) except for Pluto, whose orbit is tilted by about 17° compared to the other planets’ orbits</li>
 </ul>
-<img src="resources/images/outer_orb.jpg" width="100%" />
-<div style="background-color: #222222; margin-bottom: 0; padding-left: 0; width: 100%; height: 64px; text-align: center; vertical-align: middle;" >
-	<a href="#" class="slideshow-arrow planets prev" style="display: inline-block; text-align: left;"><img src="resources/icons/backward.png" /></a>
-	<span style="display: inline-block; color: white;"><h3 style="margin-bottom: 0;">THE SOLAR SYSTEM</h3><span style="font-size: 0.8em;">(press keyboard arrow keys)</span></span>
-	<a href="#" class="slideshow-arrow planets next" style="display: inline-block; text-align: right;"><img src="resources/icons/forward.png" /></a>
+<div class="slideshow-header">
+	<a href="#" class="slideshow-arrow solarsystem-slideshow prev" style="display: inline-block; text-align: left;"><img src="resources/icons/backward.png" /></a>
+	<span><h3>THE SOLAR SYSTEM</h3><span style="font-size: 0.8em;">(press keyboard arrow keys)</span></span>
+	<a href="#" class="slideshow-arrow solarsystem-slideshow next" style="display: inline-block; text-align: right;"><img src="resources/icons/forward.png" /></a>
 </div>
-<div id="planets" class="data-slideshow"><ul>
+<div id="solarsystem-slideshow" class="data-slideshow"><ul>
 	<li>
-		<div class="slideshow-header" id="sun"><h3>Sun</h3></div>
+		<div class="slideshow-frameheader" id="sun"><h3>Sun</h3></div>
 		<div class="slideshow-figures">
 			<figure><img src="resources/images/Sun920607.jpg" /><span class="figcaption"></span></figure> 
 			<table><tr><th>Mythology</th><td>The Sun God. Greeks Called it <i>Hellos.</i></td></tr>
@@ -268,14 +107,11 @@
 			<li>As the nuclear fusion of hydrogen into helium is an exothermic process, the core generates heat and supplies an outward pressure of its own, causing the star to expand and thereby raising the rate of heat loss from radiation of light.</li>
 			<li>The star now stays in a state of dynamic equilibrium, where excessive heat production causes the star to expand and raise the rate of heat loss; and excessive heat loss causes the star to contract, increasing the temperature and pressure at its core, thereby increasing the rate of heat generation from nuclear fusion.</li>
 		</ul>
-		<h4>The lifecycle of a nuclear-powered star.</h4><ul>
-			<li>Stars </li>
-		</ul>
 	</li>
 	<li>
-		<div class="slideshow-header" id="mercury"><h3>Mercury</h3></div>
+		<div class="slideshow-frameheader" id="mercury"><h3>Mercury</h3></div>
 		<div class="slideshow-figures">
-			<figure><img src="resources/images/Reprocessed_Mariner_10_image_of_Mercury.jpg" /><span class="figcaption"></span></figure> 
+			<figure><img src="resources/images/Mercury_flyby2_20081007_226.jpg" /><span class="figcaption">A greyscale "black-and-white" photograph of Mercury taken by the <i>MESSENGER</i> space probe, the second and latest spacecraft to visit the planet, on October 7th, 2008.</span></figure> 
 			<table><tr><th>Mythology</th><td>God of travel, commerce and thieves.</td></tr>
 			<tr><th>Mass</th><td>0.056 times that of Earth</td></tr>
 			<tr><th>Moons</th><td>None</td></tr>
@@ -297,9 +133,9 @@
 		</ul>
 	</li>
 	<li>
-		<div class="slideshow-header" id="venus"><h3>Venus</h3></div>
+		<div class="slideshow-frameheader" id="venus"><h3>Venus</h3></div>
 		<div class="slideshow-figures">
-			<figure><img src="resources/images/venus-transit-17898.jpg" /><span class="figcaption"></span></figure> 
+			<figure><img src="resources/images/venus-transit-17898.jpg" /><span class="figcaption">A compilation of radar mosaics to produce a computer-simulated globe of Venus. The penetrating power, or high permeability of radar frequencies allowed the surface of Venus to be imaged. It should be noted that Venus is completely covered in clouds.<br />The data is obained from the <i>Magellan</i> spacecraft, which completed its first mapping run from September 15th, 1990 to May 15th, 1991.</span></figure> 
 			<table><tr><th>Mythology</th><td>Goddess of love and beauty.</td></tr>
 			<tr><th>Mass</th><td>0.815 times that of Earth</td></tr>
 			<tr><th>Moons</th><td>None</td></tr>
@@ -318,7 +154,7 @@
 		</ul>
 	</li>
 	<li>
-		<div class="slideshow-header" id="earth"><h3>Earth</h3></div>
+		<div class="slideshow-frameheader" id="earth"><h3>Earth</h3></div>
 		<div class="slideshow-figures">
 			<figure><img src="resources/images/earth/The_Earth_seen_from_Apollo_17.jpg" /><span class="figcaption"><span style="font-style: italic; font-weight: bold;">The Blue Marble</span> is a famous photograph of the Earth, taken on December 7th, 1972, by the crew of the <span style="font-style: italic;">Apollo 17</span> spacecraft at a distance of about 45,000 kilometers. It is one of the most iconic, and among the most widely distributed images in human history.</span></figure> 
 			<table><tr><th>Mythology</th><td>Gaia — Mother Earth</td></tr>
@@ -359,7 +195,7 @@
 		</ul>
 	</li>
 	<li>
-		<div class="slideshow-header" id="moon"><h3>The Moon</h3></div>
+		<div class="slideshow-frameheader" id="moon"><h3>The Moon</h3></div>
 		<div class="slideshow-figures">
 			<figure><img src="resources/images/FullMoon2010.jpg" /><span class="figcaption">A <i>full moon,</i> as seen from Earth's northern hemisphere.</span></figure> 
 			<table><tr><th>Mythology</th><td>God of the night</td></tr>
@@ -387,6 +223,7 @@
 			<li>The Moon takes about a month to orbit the Earth, and spins at a similar rate, and therefore we always see the same face of the Moon. How much of the Moon’s face we see depends on where it is in its orbit around the Earth. We call these different views phases.</li>
 			<li>Imagine yourself on the Earth, under point A looking towards Moon A . Because the Sun is directly behind the Moon, you see nothing of the Moon. Now imagine yourself on Earth under point C, looking directly towards Moon C. From here you would see only half the Moon.</li>
 		</ul>
+		<figure style="float: right;"><img src="resources/images/Eclipses_solares.en.png" /><span class="figcaption">A diagram of how how shadows are projected.</span></figure>
 		<h4>The Moon and the tides</h4><ul>
 			<li>As early as the second century BC, the Chinese had recognised a connection between tides and the Moon’s cycle. About twice a day the sea level rises to a high tide and falls to a low tide—the average time between two high tides is 12 hours 25 minutes. It was not until Newton proposed a theory of gravity in 1687 that tides were understood to be the result of the Moon’s gravitational pull on the Earth.</li>
 			<li>The gravitational force between two objects is only noticeable when one or both objects are very large, as is the case with the Moon and the Earth. The Moon attracts the oceans towards it, enough to cause a bulge in the oceans facing the Moon. If this were the only effect there would only be one high tide and one low tide a day, not two. The Earth’s rotation, however, causes a similar bulge on the other side of the Earth.</li>
@@ -394,7 +231,6 @@
 		<h4>Solar eclipse</h4>
 		<p>The word <i>‘eclipse’</i> comes from the Greek word for <i>‘abandonment’</i> — the eclipse was seen as the Sun abandoning the Earth. There are three types of solar eclipses.</p>
 		<ol>
-			<figure style="float: right;"><img src="resources/images/Eclipses_solares.en.png" /><span class="figcaption">A diagram of how how shadows are projected.</span></figure>
 			<li>Total solar eclipse is when the Sun is covered by the Moon.</li>
 			<li>Annular solar eclipse occurs when the Moon is at its greatest distance from the Earth.</li>
 			<li>Partial solar eclipse is when the Moon covers only part of the Sun.</li>
@@ -407,7 +243,7 @@
 		<figure style="float: right; width: 400px; height: auto;"><img src="resources/images/Eclipse_fromISS_2006-03-29.jpg" style="width: 400px;" /><span class="figcaption">A photograph of the Earth from the <i>International Space Station,</i> taken on March 29th, 2006.</span></figure>-->
 	</li>
 	<li>
-		<div class="slideshow-header" id="mars"><h3>Mars</h3></div>
+		<div class="slideshow-frameheader" id="mars"><h3>Mars</h3></div>
 		<div class="slideshow-figures">
 			<figure><img src="resources/images/2005-1103mars-full.jpg" /><span class="figcaption">A picture of Mars, "The Red Planet." A blue aurora can be seen at its north pole; caused by collision of solar or charged particles with the atmosphere's air molecules. It is observed only at the poles as the charged particles are deflected and "guided" by the planet's magnetic field lines towards and into the poles.</span></figure> 
 			<table><tr><th>Mythology</th><td>God of war</td></tr>
@@ -434,7 +270,7 @@
 		</ul>
 	</li>
 	<li>
-		<div class="slideshow-header" id="jupiter"><h3>Jupiter</h3></div>
+		<div class="slideshow-frameheader" id="jupiter"><h3>Jupiter</h3></div>
 		<div class="slideshow-figures">
 			<figure><img src="resources/images/Jupiter.jpg" /><span class="figcaption">A picture of Jupiter. The hue of the surface is seen as varying with longtitude, and with low magnification, the details of the surface can be lost. The large round storm near the bottom-left of the planet is the <i>"Big Red Dot."</i></span></figure> 
 			<table><tr><th>Mythology</th><td>Ruler of the Gods</td></tr>
@@ -462,7 +298,7 @@
 		</ul>
 	</li>
 	<li>
-		<div class="slideshow-header" id="saturn"><h3>Saturn</h3></div>
+		<div class="slideshow-frameheader" id="saturn"><h3>Saturn</h3></div>
 		<div class="slideshow-figures">
 			<figure><img src="resources/images/Saturn_from_Cassini_Orbiter_%282007-01-19%29.jpg" /><span class="figcaption">A photograph of Saturn, captured by the Cassini Orbiter on January 19th, 2007.</span></figure> 
 			<table><tr><th>Mythology</th><td>God of agriculture</td></tr>
@@ -489,9 +325,9 @@
 		</ul>
 	</li>
 	<li>
-		<div class="slideshow-header" id="uranus"><h3>Uranus</h3></div>
+		<div class="slideshow-frameheader" id="uranus"><h3>Uranus</h3></div>
 		<div class="slideshow-figures">
-			<figure><img src="resources/images/Uranus_as_seen_by_NASA's_Voyager_2.jpg" /><span class="figcaption">A photograph of Neptune, captured by the <i>Voyager 2</i> spacecraft on December 18th, 1986. </span></figure>
+			<figure><img src="resources/images/Uranus_as_seen_by_NASA's_Voyager_2.jpg" /><span class="figcaption">A photograph of Uranus, captured by the <i>Voyager 2</i> spacecraft on December 18th, 1986. The images received from the spacecraft show Uranus as an almost featureless planet in the visible light spectrum. Nevertheless, observations from Earth have shown Uranus to have seasonal change and increased weather activity in its atmosphere as the planet reached equinox.</span></figure>
 			<table><tr><th>Mythology</th><td>Father of Saturn</td></tr>
 			<tr><th>Mass</th><td>14.54 times that of Earth</td></tr>
 			<tr><th>Moons</th><td>At least 21 moons and 11 rings</td></tr>
@@ -504,15 +340,18 @@
 			<tr><th>Distance from Sun</th><td>19.2 AU (2875 million kilometres)</td></tr>
 			<tr><th>Time to orbit Sun</th><td>84 Earth years</table>
 		</div>
-		<figure style="width: 400px; float: right;"><img src="resources/images/Uranusandrings.jpg" /><span class="figcaption"></span></figure>
 		<h4>Key points</h4><ul>
-			<li>Uranus is one of the four gas giants in our solar system.</li>
-			<li>It also has rings; however they are not as prominent as Saturn's rings. It's composed mostly of ice particles.</li>
-			<li></li>
+			<li>Uranus is one of the two ice giants in our solar system, with Neptune being the other.</li>
+			<li>It also has rings and several moons; however the rings are not as prominent as Saturn's rings. The rings are composed mostly of ice particles. It was the second ring structure to be discovered in our solar system.</li>
+			<li>The Uranian system (<i>i.e.</i> Uranus and its satellites) has the most peculiar axis of rotation – it has an axis tilt of 97.77°. The cause for this is uncertain, but speculation is that an Earth-sized protoplanet collided and caused the skewed rotation.</li>
+			<li>For about half of the planet's orbital period of 84 Earth years, each pole receives 42 years of sunlight followed by 42 years of darkness. The equator experiences a rapid day/night cycle. Nevertheless, due to some yet unknown mechanism, the equator remains hotter than the poles.</li>
+			<li>Uranus has a magnetosphere that was first measured by <i>Voyager 2</i> in January 24th, 1986, and the planet was found to have a peculiar magnetic field. Its magnetosphere is unusually tilted from its axis of rotation by 59°, and this results in the northern and southern poles having highly asymmetric magnetic field strengths: from 10 microtesla at the southern hemisphere and 110 microtesla at the northern hemisphere.</li>
 		</ul>
+		<figure style="height: 400px; float: left;"><img src="resources/images/uranus/Uranian_rings_scheme.png" /><span class="figcaption"></span></figure>
+		<figure style="height: 400px; float: left;"><img src="resources/images/uranus/Uranusandrings.jpg" /><span class="figcaption"></span></figure>
 	</li>
 	<li>
-		<div class="slideshow-header" id="neptune"><h3>Neptune</h3></div>
+		<div class="slideshow-frameheader" id="neptune"><h3>Neptune</h3></div>
 		<div class="slideshow-figures">
 			<figure><img src="resources/images/Neptune.jpg" /><span class="figcaption"></span></figure> 
 			<table><tr><th>Mythology</th><td>God of the sea</td></tr>
@@ -529,7 +368,7 @@
 		</div>
 	</li>
 	<li>
-		<div class="slideshow-header" id="pluto"><h3>Pluto (dwarf planet)</h3></div>
+		<div class="slideshow-frameheader" id="pluto"><h3>Pluto (dwarf planet)</h3></div>
 		<div class="slideshow-figures">
 			<figure><img src="resources/images/Pluto.jpg" /><span class="figcaption"></span></figure>
 			<table><tr><th>Mythology</th><td>God of the underworld</td></tr>
@@ -547,26 +386,9 @@
 		<figure style="float: right;"><img src="resources/images/New_Horizons_Transparent.png" style="width: 400px;" /><span class="figcaption">An illustration of <i>New Horizons,</i> the first spacecraft to reach Pluto.</span></figure>
 		<p>In July 2015, ten years after launching, the New Horizons spacecraft captured the first up-close imagery of Pluto, its moons and will continue to also record findings from a region of the outer solar system called the Kuiper Belt. So far, only the New Horizons spacecraft has reached Pluto.</p>
 	</li>
-	<li>
-		<div class="slideshow-header" id="eris"><h3>Eris (dwarf planet)</h3></div>
-		<div class="slideshow-figures">
-			<figure><img src="resources/images/Eris_and_dysnomia2.jpg" /><span class="figcaption">Eris (centre) and Dysnomia (lower-left).</span></figure>
-			<table><tr><th>Mythology</th><td>Greek goddess of strife</td></tr>
-			<tr><th>Mass</th><td>(1.67&nbsp;±&nbsp;0.02)&nbsp;×&nbsp;10<sup>22</sup>&nbsp;kg<br />0.0028&nbsp;Earths<br />0.23&nbsp;Moons</td></tr>
-			<tr><th>Moons</th><td>1 (Dysnomia)</td></tr>
-			<tr><th>Diameter</th><td>2600 km (± 400 km) Surface</td></tr>
-			<tr><th>Gravity</th><td></td></tr>
-			<tr><th>Surface Temperature</th><td>−243 and −217 degrees Celsius</td></tr>
-			<tr><th>Period of rotation</th><td>Possibly 8 hours</td></tr>
-			<tr><th>Distance from Sun</th><td>37.78 AU to 97.56 AU</td></tr>
-			<tr><th>Time to orbit Sun</th><td>556.7 Earth years</table>
-		</div>
-		<p>Discovered January 5, 2005, from images taken on October 21, 2003.</p>
-	</li>
 </ul></div>
-
-<figure style="width: 100%; margin: 0;"><img src="resources/images/obliquity.jpg" width="100%" style="margin-top: -1em;" /><span class="figcaption">Comparing tilt of axis</span></figure>
-<h2>Technology</h2>
+<h2 id="technology">Technology</h2>
+<figure style="float: right;"><img src="resources/images/International_Space_Station.jpg" style="width: 400px;" /><span class="figcaption">The <i>International Space Station</i> is one of the flagships of human spaceflight technology and capability. It has a habitable environment and most of the time, there are astronomers occupying the station, who commit to months-long expeditions to it. Photograph taken on May 23rd, 2010.</span></figure>
 <p>For millenia, technology has been critical for the observation of the stars and planets. This includes the invention of the astronomical telescope by Galileo, which was fundamental to his proof for the heliocentric model and the fundamentals of this invention is perverse throughout the modern array of astronomy tools.</p>
 <p>In the recent century, rocket propulsion and extraterrestrial travel became possible. Satellites have been sent into orbit around our Earth, giving us our first pictures on what our planet looks like.</p>
 <p>As well as this major feat, probes have been sent to orbit and land on the Moon, and beyond to other planets. Satellites have been sent to orbit for observational purposes as well, including the <i>Hubble Space Telescope,</i> a megaproject that included numerous launches to make the most powerful optical telescope so far. Its great advantage is that there is no interference from atmospheric effects e.g. such as cloud cover, light refraction.</p>
@@ -603,11 +425,11 @@
 	<li><i>Black holes & quasars</i>.</li>
 	<li><i>Neutron stars</i>.</li>
 </ul>
-<h2>Project details</h2>
-<p><b><i>The Universe on the Web</i></b> was created in 1 to 2 weeks by two students as a science fair project. Continuing afterwards, the project continues to be worked on in pursuit of completion. The project's authors are:</p>
+<h2 id="bottom">Project details</h2>
+<p><b><i>The Universe on the Web</i></b> was created in 1 to 2 weeks by two students as a science fair project. Here afterwards, the project continues to be worked on in pursuit of completion. The project's authors are:</p>
 <ul style="margin-bottom: 0; padding-bottom: 1em;">
-	<li><b>Mahdi Kabir.</b><br /><div style="padding-left: 2em;"><span>Responsible for content, imagery and design input.</span></li>
-	<li><b>Nahiyan.</b><br /><div style="padding-left: 2em;"><span>Responsible for coding, implementation and some design input.</span></li>
+	<li><b>Mahdi Kabir.</b><br /><div style="padding-left: 2em;"><span>Responsible for content, imagery and partial design input.</span></li>
+	<li><b>Nahiyan.</b><br /><div style="padding-left: 2em;"><span>Responsible for coding, implementation and partial design input.</span></li>
 </ul>
 	</body>
 </html>

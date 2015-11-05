@@ -1,5 +1,7 @@
 body {
-	background-image: url("resources/background.png");
+	/*background-image: url("resources/background.png");*/
+	background-color: rgb(37, 37, 37) !important;
+	-webkit-print-color-adjust: exact;
 	
 	font-family: "Proxima Nova Regular", "Open Sans", sans-serif;
 	color: white;
@@ -17,7 +19,7 @@ header {
 	left: 0;
 	top: 0;
 	width: 100%;
-	/*height: 6em;*/
+	height: 6.5em;
 	margin: 0;
 	padding: 0;
 	z-index: 50;
@@ -26,14 +28,16 @@ header {
 	transition: ease-in-out top 0.5s;
 }
 .header-animate {
-	top: -20%;
+	top: -5em;
 }
 
 #title {
 	font-family: "Impact", sans-serif;
 	font-size: 2em;
+	font-weight: 300;
 	font-stretch: expanded;
 	text-transform: uppercase;
+	letter-spacing: 2px;
 	color: white;
 	
 	display: inline-block;
@@ -63,66 +67,65 @@ h1, h2, h3, h4, h5 {
 #content>h2 {
 	padding-top: 0.5em !important;
 	padding-bottom: 0.5em !important;
-
+	padding-left: 0 !important;
+	
 	display: block;
 	background-color: #484848;
 	border-top: 1px solid #606060;
 	border-bottom: 1px solid #606060;
 	
 	color: white;
+	text-align: center;
+	text-transform: uppercase;
 }
 
 #navigator {
-	display: inline-block;
-	position: relative;
-	top: 50%;
-	right: 50%;
-	margin-top: 0;
-	margin-bottom: 0;
-	margin-left: -50%;
+	text-align: center;
 	
-	transform: translate(-50%, -50%);
-	-webkit-transform: translate(-50%, -50%);
-	-moz-transform: translate(-50%, -50%);
-	-ms-transform: translate(-50%, -50%);
-	
-	background-color: rgba(204, 204, 204, 0.8);
-	
-	/*width: auto;*/
+	width: 100%;
 	padding: 0;
 	
-	transition: ease-in-out opacity 0.5s;
+	opacity: 0;
+	height: 0;
+	overflow: hidden;
+	transition: ease-in-out height 0s, opacity 0.5s;
 }
 #navigator>tbody>tr {
 	margin-left: 0px;
 	margin-right: -1px;
 }
 #navigator>tbody>tr>td {
-	width: 50%;
-	padding: 0;
+	padding-right: 0.5em;
+	transition: ease-in-out background 0.4s;
+	vertical-align: middle;
+}
+#navigator>tbody>tr>td:hover {
+	background: #444444;
 }
 #navigator>tbody>tr>td>a {
-	/*display: block;*/
-	padding: 0;
+	display: block;
+	
 	vertical-align: middle;
 	
 	font-size: 1.5em;
-	font-family: 'Bebas Neue';
-	color: black;
-	text-decoration: none;
-	
-	border-top: 4px solid rgba(0, 0, 0, 0.8);
-	border-bottom: 4px solid rgba(0, 0, 0, 0.8);
-	transition: ease-in-out background 0.4s, color 0.2s, border-top 0.2s, border-bottom 0.2s;
-}
-#navigator>tbody>tr>td>a:hover {
-	background: #444444;
+	font-family: 'Times New Roman';
 	color: white;
-	border-top: 4px solid rgba(17, 17, 17, 0.8);
-	border-bottom: 4px solid rgba(17, 17, 17, 0.8);
+	text-decoration: none;
 }
-.navigator-animate {
-	opacity: 1 !important;
+#navigator>tbody>tr>td>a>img {
+	display: inline-block;
+	vertical-align: middle;
+}
+#navigator>tbody>tr>td>a>span {
+	margin-left: 5px;
+	display: none;
+}
+#navigator>tbody>tr>td:hover>a>span {
+	display: inline-block;
+}
+.header-animate>#navigator {
+	height: auto;
+	opacity: 1;
 }
 
 #header-image {
@@ -182,7 +185,7 @@ li {
 	margin-left: 2.5em;
 	margin-right: 2.5em;
 	padding-bottom: 0.3em;
-	font-size: 0.9em;
+	font-size: 0.9rem; /* @note: rem stands for root element. */
 }
 
 table {
@@ -256,7 +259,7 @@ figure>.figcaption {
 	
 	background: rgba(0,0,0, .3);
 	color: white;
-	font-size: .8em;
+	font-size: 0.8rem; /* @note: rem stands for root element. */
 	
 	opacity: 0;
 	transition: ease-in-out opacity .5s;
@@ -270,8 +273,7 @@ figure>.figcaption {
 quotation, div.data-slideshow {
 	display: block;
 	background-color: #484848;
-	border-top: 1px solid #606060;
-	border-bottom: 1px solid #BCBCBC;
+	border-top: 1px solid #262626;
 	margin: 1em 0em 1em 0em;
 	
 	color: white;
@@ -315,15 +317,21 @@ div.data-slideshow>ul>li, div.data-slideshow>ul {
 div.data-slideshow>ul>li>h1, div.data-slideshow>ul>li>h2, div.data-slideshow>ul>li>h3, div.data-slideshow>ul>li>h4, div.data-slideshow>ul>li>h5 {
 	padding-left: 2.5em !important;
 }
-div.data-slideshow>ul>li>div.slideshow-header {
-	position: relative;
-	background-color: #2C2C2C;
-	width: 100%;
-	height: 3.8em;
+div.slideshow-header {
+	background-color: #3F3F3F;
+	border-top: #505050 1px solid;
+	
+	margin-bottom: 0;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	height: 64px;
 	
 	text-align: center;
 	vertical-align: middle;
 }
+div.slideshow-header>span      { display: inline-block; color: white; }
+div.slideshow-header>span>h3   { margin-bottom: 0;                    }
+div.slideshow-header>span>span { font-size: 0.8em;                    }
 a.slideshow-arrow {
 	position: absolute;
 	margin: auto;
@@ -340,7 +348,16 @@ a.slideshow-arrow>img {
 	height: inherit;
 	width: inherit;
 }
-div.data-slideshow>ul>li>div.slideshow-header>h3 {
+div.data-slideshow>ul>li>div.slideshow-frameheader {
+	position: relative;
+	background-color: #2C2C2C;
+	width: 100%;
+	height: 3.8em;
+	
+	text-align: center;
+	vertical-align: middle;
+}
+div.data-slideshow>ul>li>div.slideshow-frameheader>h3 {
 	display: inline-block;
 	margin: 1em 0;
 	padding: 0;
@@ -414,4 +431,10 @@ div#moon>h3, div#moon>h4 {
 	font-weight: normal;
 	src: url(resources/fonts/ProximaNova_Regular.eot) format("embedded-opentype");
 }
-  
+
+@font-face {
+	font-family: 'Times New Roman';
+	font-style: normal;
+	font-weight: normal;
+	src: url(resources/fonts/times.ttf) format('truetype');
+}
