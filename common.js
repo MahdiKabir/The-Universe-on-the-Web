@@ -52,7 +52,7 @@
 		{
 			var image_present = false;
 			var caption_present = false;
-			var new_height = 0, new_width = 0;
+			var new_width = 0;
 			var fig_img, fig_cap;
 			
 			var len_j = figures[i].children.length;
@@ -76,15 +76,12 @@
 			
 			if (image_present)
 			{
-				var img_width = toString(new_width), img_height = toString(new_height);
+				var img_width = toString(new_width);
 				
-				if (fig_img.style.width  !== "") img_width  = fig_img.style.width;
-					else img_width  = fig_img.width + "px";
-				if (fig_img.style.height !== "") img_height = fig_img.style.height;
-					else img_height = fig_img.height + "px";
+				if (fig_img.style.width !== "") img_width = fig_img.style.width;
+					else img_width = fig_img.width + "px";
 				
-				figures[i].style.width  = img_width;
-				figures[i].style.height = img_height;
+				figures[i].style.width = img_width;
 			}
 			
 			if (caption_present)

@@ -242,7 +242,6 @@ figure {
 	padding-left: 0 !important;
 }
 figure>img {
-	position: absolute;
 	top: 0;
 	left: 0;
 	height: inherit;
